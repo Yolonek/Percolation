@@ -1,6 +1,8 @@
 import numpy as np
+from CommonFunctions import make_directories, check_if_file_exists
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+import os
 
 
 class ProbabilitySite(object):
@@ -54,17 +56,70 @@ class ProbabilitySite(object):
             pass
         return figure
 
+    def plot_grid_as_matrix(self, matrix=None, axes=None):
+        if axes:
+            axes.axis('off')
+            matrix = np.round(np.array(matrix if matrix else self.initial_grid), 4)
+
+            try:
+                cell_height = 1 / matrix.shape[0]
+                cell_width = 1 / matrix.shape[1]
+            except IndexError:
+                matrix = matrix[:, None]
+                cell_height = 1 / matrix.shape[0]
+                cell_width = 1 / matrix.shape[1]
+
+            table = axes.table(cellText=matrix, loc='center', cellLoc='center')
+            table.auto_set_font_size(False)
+            table.set_fontsize(9)
+
+            for cell in table._cells.values():
+                cell.set_edgecolor('none')
+                cell.set_linewidth(0)
+                cell.set_height(cell_height)
+                cell.set_width(cell_width)
+
+    def plot_grid2(self, initial=True, ax=None, title='', cmap_name='gray'):
+        if ax:
+            grid = self.initial_grid if initial else self.grid
+            ax.imshow(grid, cmap=cmap_name,
+                      vmin=0, vmax=1, interpolation='nearest')
+            if title:
+                ax.set_title(title)
+
 
 if __name__ == '__main__':
     L = 100
-    p = 0.5
-    probability_grid = ProbabilitySite(L=L, p=p)
-    colors = [(0, 0, 0), (1, 1, 1)]
-    bitmap = 2
-    print(probability_grid.initial_grid)
-    fig1 = probability_grid.plot_grid()
+    p = [0.3, 0.5, 0.7]
+
+    figure, axes = plt.subplots(len(p), 2, layout='constrained')
+    probability_grid = ProbabilitySite(L=L)
+    for index, probability in enumerate(p):
+        probability_grid.change_probability(probability)
+        probability_grid.grid_thresholding()
+        title = f'$p = {probability}$'
+        probability_grid.plot_grid2(initial=True, ax=axes[index][0],
+                                    title=title, cmap_name='bone')
+        probability_grid.plot_grid2(initial=False, ax=axes[index][1],
+                                    title=title, cmap_name='bone')
+        axes[index][0].axis('off')
+        axes[index][1].axis('off')
+
+    figure.suptitle('Probability grid before and after thresholding for various $p$\n'
+                    'for the same probability grid')
+    figure.set_size_inches(5, 2.2 * len(p))
     plt.show()
-    probability_grid.grid_thresholding()
-    fig2 = probability_grid.plot_grid(initial=False, colormap=(colors, bitmap))
-    plt.show()
+
+    image_path = 'images'
+    make_directories([image_path])
+    image_name = f'ProbabilitySiteL{L}p'
+    for probability in p:
+        image_name += f'-{probability}'
+    image_name += '.png'
+
+    path = os.path.join(image_path, image_name)
+    if not check_if_file_exists(path):
+        figure.savefig(path)
+
+
 
