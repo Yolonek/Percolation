@@ -93,7 +93,7 @@ class BurningModel(ProbabilitySite):
             colors, quality = cmap
             cmap = LinearSegmentedColormap.from_list('', colors, N=quality)
             title = (f'{"Percolation reached" if self.check_if_percolation_threshold_reached() else "No percolation"}.'
-                     f'$L = {self.L}$\n Longest path: {self.step} steps, $p = {self.p}$')
+                     f'L = {self.L}\n Longest path: {self.step} steps, $p = {self.p}$')
             ax.imshow(grid, cmap=cmap, interpolation='nearest')
             ax.set_title(title)
             ax.axis('off')
