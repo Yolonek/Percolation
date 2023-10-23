@@ -5,7 +5,7 @@ from CommonFunctions import *
 
 
 if __name__ == '__main__':
-    t = 1000
+    t = 100
     L_list = [100, 50, 10]
     percolation_p = 0.592746
     probability_space = create_probability_space(percolation_p)
@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     perform_simulation = []
     for L in L_list:
-        file_name = f'Average_L{L}T{t}'
+        file_name = f'Average_L{L}T{t}.csv'
         is_simulation_done = check_if_file_has_data(file_name, sub_dir=results_path)
         ask_to_redo_simulation = False
         if is_simulation_done:
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                 percolation_time[index] = time_delta
                 print(f'Percolation probability: {percolation_probability}, '
                       f'site probability: {probability}, time taken: {time_delta}')
-            file_title = os.path.join(results_path, f'Average_L{L}T{t}')
+            file_title = os.path.join(results_path, f'Average_L{L}T{t}.csv')
             data_to_save = pd.DataFrame()
             data_to_save['site_prob'] = probability_space.tolist()
             data_to_save['perc_prob'] = percolation_p_space.tolist()

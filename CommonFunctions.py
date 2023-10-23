@@ -29,12 +29,12 @@ def make_directories(list_of_dirs):
 
 
 def create_probability_space(critical_probability):
-    prob_array = np.arange(0.05, 0.5, 0.05)
+    prob_array = np.arange(0.25, 0.5, 0.05)
     critical_values = np.arange(0.5, 0.7, 0.005)
     critical_values = np.insert(critical_values, -1, critical_probability)
     critical_values.sort()
     prob_array = np.concatenate((prob_array, critical_values))
-    end_values = np.arange(0.7, 1, 0.05)
+    end_values = np.arange(0.7, 0.85, 0.05)
     prob_array = np.concatenate((prob_array, end_values))
     return prob_array
 

@@ -108,7 +108,6 @@ if __name__ == '__main__':
     figure.suptitle('Probability grid before and after thresholding for various $p$\n'
                     'for the same probability grid')
     figure.set_size_inches(5, 2.2 * len(p))
-    plt.show()
 
     image_path = 'images'
     make_directories([image_path])
@@ -120,6 +119,4 @@ if __name__ == '__main__':
     path = os.path.join(image_path, image_name)
     if not check_if_file_exists(path):
         figure.savefig(path)
-
-
-
+    plt.show()

@@ -1,6 +1,7 @@
 from ProbabilitySite import ProbabilitySite
 import numpy as np
 import os
+import copy
 import pandas as pd
 from time import time
 from CommonFunctions import make_directories, check_if_file_exists
@@ -52,9 +53,12 @@ class BurningModel(ProbabilitySite):
         else:
             return False
 
-    def burning_model(self, reset_grid=False, break_at_percolation=True):
+    def burning_model(self, reset_grid=False, break_at_percolation=True, initial_grid=None):
         if reset_grid:
-            self.set_initial_grid()
+            if initial_grid is not None:
+                self.set_initial_grid(initial_grid=initial_grid)
+            else:
+                self.set_initial_grid()
             self.grid_thresholding()
             self.set_top_row_to_initial_value()
         while True:
@@ -88,29 +92,29 @@ class BurningModel(ProbabilitySite):
     def plot_percolation(self, ax=None, cmap=()):
         if ax:
             cmap = cmap if cmap else ([(0, 0, 0), (0, 1, 0), (1, 0, 0)], 3)
-            grid = self.grid
+            grid = copy.copy(self.grid)
             grid[grid >= 2] = 2
             colors, quality = cmap
             cmap = LinearSegmentedColormap.from_list('', colors, N=quality)
-            title = (f'{"Percolation reached" if self.check_if_percolation_threshold_reached() else "No percolation"}.'
-                     f'L = {self.L}\n Longest path: {self.step} steps, $p = {self.p}$')
+            title = (f'{"Percolation reached" if self.check_if_percolation_threshold_reached() else "No percolation"}. '
+                     f'$L = {self.L}$\n Longest path: {self.step} steps, $p = {self.p}$')
             ax.imshow(grid, cmap=cmap, interpolation='nearest')
             ax.set_title(title)
             ax.axis('off')
 
 
 if __name__ == '__main__':
-    L = 500
+    L = 50
     p = [0.5, 0.6, 0.7]
 
     figure, axes = plt.subplots(len(p), 1, layout='constrained')
     probability_grid = BurningModel(L=L)
+    initial_grid = probability_grid.get_initial_grid()
     for index, probability in enumerate(p):
         probability_grid.change_probability(probability)
-        probability_grid.burning_model(reset_grid=True)
+        probability_grid.burning_model(reset_grid=True, initial_grid=initial_grid)
         probability_grid.plot_percolation(ax=axes[index])
     figure.set_size_inches(4, 3 * len(p))
-    plt.show()
 
     image_path = 'images'
     make_directories([image_path])
@@ -123,6 +127,6 @@ if __name__ == '__main__':
     if not check_if_file_exists(path):
         figure.savefig(path)
 
-
+    plt.show()
 
 
