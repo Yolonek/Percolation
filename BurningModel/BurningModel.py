@@ -118,7 +118,6 @@ if __name__ == '__main__':
     path = os.path.join(image_path, image_name)
     if not check_if_file_exists(path):
         figure.savefig(path)
-
     plt.show()
 
 

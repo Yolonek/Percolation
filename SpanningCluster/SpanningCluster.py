@@ -1,6 +1,9 @@
 from ProbabilitySite import ProbabilitySite
 from matplotlib import pyplot as plt
 import numpy as np
+from CommonFunctions import make_directories, check_if_file_exists
+import os
+from time import time
 
 
 class SpanningCluster(ProbabilitySite):
@@ -18,10 +21,16 @@ class SpanningCluster(ProbabilitySite):
         self.trials_array = None
         self.clusters_concatenated = False
 
-    def reset_simulation(self, initial_grid=None):
+    def reset_simulation_params(self, initial_grid=None):
         self.k = 2
         self.Mk = {f'Mk{self.k}': f'{1}'}
         self.set_initial_grid(initial_grid=initial_grid)
+        self.top_value = 0
+        self.left_value = 0
+        self.mc_steps = 0
+        self.cluster_size_histogram = {}
+        self.number_of_trials = 1
+        self.clusters_concatenated = False
 
     def set_top_left_site(self):
         initial_value_assigned = False
@@ -95,11 +104,12 @@ class SpanningCluster(ProbabilitySite):
                 self.grid[x_pos][y_pos] = self.left_value
                 self.concatenate_clusters(self.left_value, self.top_value, update_clusters=update_clusters)
 
-    def hk_algorithm(self, reset_grid=False, update_clusters=False):
+    def hk_algorithm(self, reset_grid=False, update_clusters=False, initial_grid=None):
         if reset_grid:
-            self.set_initial_grid()
+            self.set_initial_grid(initial_grid=initial_grid)
             self.grid_thresholding()
             self.set_top_left_site()
+            self.reset_simulation_params()
         self.find_occupied_sites()
         x_values = self.occupied_sites[0]
         y_values = self.occupied_sites[1]
@@ -131,7 +141,7 @@ class SpanningCluster(ProbabilitySite):
             biggest_cluster = self.find_biggest_cluster()
             self.trials_array[trial] = biggest_cluster
             self.convert_cluster_to_histogram()
-            self.reset_simulation()
+            self.reset_simulation_params()
 
     def get_histogram(self):
         return self.cluster_size_histogram
@@ -168,27 +178,47 @@ class SpanningCluster(ProbabilitySite):
             ax.set(xticks=[], yticks=[])
 
 
-
 if __name__ == '__main__':
-    L = 50
-    p = 0.50
-    cluster = SpanningCluster(L=L, p=p)
-    cluster.grid_thresholding()
-    cluster.set_top_left_site()
-    cluster.hk_algorithm(update_clusters=True)
-    print(cluster.grid)
-    print(cluster.Mk)
-    print(cluster.find_biggest_cluster())
-    cluster.convert_cluster_to_histogram()
-    print(cluster.cluster_size_histogram)
-    print(cluster.map_random_values_to_clusters())
+    L = 500
+    p = [0.4, 0.54, 0.56, 0.58, 0.6, 0.8]
+    # p = [0.56]
+    use_one_column = False
+    concatenate = True
 
-    figure, axes = plt.subplots(1, 1, layout='constrained')
-    cluster.visualize_clusters(ax=axes)
+    spanning_cluster = SpanningCluster(L=L)
+    initial_grid = spanning_cluster.get_initial_grid()
+    if use_one_column:
+        figure, axes = plt.subplots(len(p), 1, layout='constrained')
+        figure.set_size_inches(4, 3 * len(p))
+    else:
+        graph_length = int(len(p) / 2)
+        figure, axes = plt.subplots(graph_length, 2, layout='constrained')
+        figure.set_size_inches(8, 3 * graph_length)
+        axes = axes.ravel()
+    axes = [axes] if len(p) == 1 else axes
+    for index, probability in enumerate(p):
+        start_time = time()
+        spanning_cluster.change_probability(probability)
+        spanning_cluster.hk_algorithm(reset_grid=True,
+                                      initial_grid=initial_grid,
+                                      update_clusters=concatenate)
+        spanning_cluster.convert_cluster_to_histogram()
+        spanning_cluster.visualize_clusters(ax=axes[index])
+        stop_time = time()
+        print(f'Visualization done for p = {probability}. '
+              f'Time taken: {round(stop_time - start_time, 3)} seconds')
+
+    image_path = 'images'
+    make_directories([image_path])
+    image_name = f'HKVisualizationL{L}p'
+    for probability in p:
+        image_name += f'-{probability}'
+    image_name += '_concat' if concatenate else ''
+    image_name += '_one_col' if use_one_column else '_two_col'
+    image_name += '.png'
+
+    path = os.path.join(image_path, image_name)
+    if not check_if_file_exists(path):
+        figure.savefig(path)
     plt.show()
-
-
-
-
-
 
