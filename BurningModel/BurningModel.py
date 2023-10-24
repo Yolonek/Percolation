@@ -1,7 +1,6 @@
 from ProbabilitySite import ProbabilitySite
 import numpy as np
 import os
-import copy
 from CommonFunctions import make_directories, check_if_file_exists
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
@@ -84,7 +83,7 @@ class BurningModel(ProbabilitySite):
     def plot_percolation(self, ax=None, cmap=()):
         if ax:
             cmap = cmap if cmap else ([(0, 0, 0), (0, 1, 0), (1, 0, 0)], 3)
-            grid = copy.copy(self.grid)
+            grid = self.get_current_grid()
             grid[grid >= 2] = 2
             colors, quality = cmap
             cmap = LinearSegmentedColormap.from_list('', colors, N=quality)

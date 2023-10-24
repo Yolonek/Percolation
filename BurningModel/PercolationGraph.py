@@ -7,7 +7,7 @@ from CommonFunctions import make_directories, check_if_file_exists
 
 if __name__ == '__main__':
     L_list = [100, 50, 10]
-    t = 10000
+    t = 100
     percolation_p = 0.592
 
     results_path = 'results'
@@ -33,11 +33,12 @@ if __name__ == '__main__':
         axes[1].plot(dataframe['site_prob'], dataframe['perc_time'],
                      label=f'L = {L}, time = {total_time} s', color=colors[index])
     for index in range(2):
-        axes[index].axvline(x=percolation_p, color='black', linestyle='--', label=f'$p_c$ = {percolation_p}')
+        axes[index].axvline(x=percolation_p, color='black',
+                            linestyle='--', label=f'$p_c$ = {percolation_p}')
         axes[index].legend(loc='upper left')
         axes[index].grid()
     axes[0].set(xlabel='site probability', ylabel='percolation probability')
-    axes[1].set(xlabel='site probability', ylabel='time [s]', yscale='log')
+    axes[1].set(xlabel='site probability', ylabel='time [s]')
     axes[0].set_title('Percolation probability dependence for each site probability')
     axes[1].set_title(f'Time taken for each probability. Each value calculated for mean t = {t}')
     figure.set_size_inches(8, 10)

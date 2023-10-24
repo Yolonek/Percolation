@@ -29,7 +29,6 @@ class SpanningCluster(ProbabilitySite):
         self.left_value = 0
         self.mc_steps = 0
         self.cluster_size_histogram = {}
-        self.number_of_trials = 1
         self.clusters_concatenated = False
 
     def set_top_left_site(self):

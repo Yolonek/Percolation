@@ -1,4 +1,4 @@
-from BurningModel import BurningModel
+from SpanningCluster import SpanningCluster
 from time import time
 import pandas as pd
 import numpy as np
@@ -9,19 +9,19 @@ from CommonFunctions import (create_probability_space, make_directories,
 
 if __name__ == '__main__':
     t = 10000
-    L_list = [100, 50, 10]
+    L_list = [10, 50, 100]
     percolation_p = 0.592746
     probability_space = create_probability_space(percolation_p)
     number_of_simulations = len(probability_space)
-    percolation_p_space = np.zeros(number_of_simulations)
-    percolation_time = np.zeros(number_of_simulations)
+    cluster_p_space = np.zeros(number_of_simulations)
+    cluster_time = np.zeros(number_of_simulations)
 
     results_path = 'results'
     make_directories([results_path])
 
     perform_simulation = []
     for L in L_list:
-        file_name = f'Average_L{L}T{t}.csv'
+        file_name = f'Dist_L{L}T{t}.csv'
         is_simulation_done = check_if_file_has_data(file_name, sub_dir=results_path)
         ask_to_redo_simulation = False
         if is_simulation_done:
@@ -34,25 +34,25 @@ if __name__ == '__main__':
     start_time = time()
     for L_index, L in enumerate(L_list):
         if perform_simulation[L_index]:
-            burning_model = BurningModel(L=L)
+            spanning_cluster = SpanningCluster(L=L)
             print(f'{f" L = {L} ":-^50}')
             for index, probability in enumerate(probability_space):
                 start_time_sim = time()
-                burning_model.change_probability(probability)
-                burning_model.t_percolation_trials(trials=t)
-                percolation_probability = burning_model.get_percolation_probability()
-                percolation_p_space[index] = percolation_probability
+                spanning_cluster.change_probability(probability)
+                spanning_cluster.t_spanning_cluster_trials(trials=t)
+                average_cluster = spanning_cluster.get_average_biggest_cluster()
+                cluster_p_space[index] = average_cluster
                 stop_time_sim = time()
                 time_delta = round(stop_time_sim - start_time_sim, 3)
-                percolation_time[index] = time_delta
-                print(f'Percolation probability: {percolation_probability}, '
+                cluster_time[index] = time_delta
+                print(f'Average cluster: {average_cluster}, '
                       f'site probability: {round(probability, 4)}, '
                       f'time taken: {time_delta} seconds')
-            file_title = os.path.join(results_path, f'Average_L{L}T{t}.csv')
+            file_title = os.path.join(results_path, f'Dist_L{L}T{t}.csv')
             data_to_save = pd.DataFrame()
             data_to_save['site_prob'] = probability_space.tolist()
-            data_to_save['perc_prob'] = percolation_p_space.tolist()
-            data_to_save['perc_time'] = percolation_time.tolist()
+            data_to_save['clus_size'] = cluster_p_space.tolist()
+            data_to_save['clus_time'] = cluster_time.tolist()
             data_to_save.to_csv(file_title, sep=',', index=False)
 
     stop_time = time()
