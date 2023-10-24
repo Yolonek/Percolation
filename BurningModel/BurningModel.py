@@ -2,8 +2,6 @@ from ProbabilitySite import ProbabilitySite
 import numpy as np
 import os
 import copy
-import pandas as pd
-from time import time
 from CommonFunctions import make_directories, check_if_file_exists
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
@@ -67,12 +65,6 @@ class BurningModel(ProbabilitySite):
                 break
             if self.grid_changed is False:
                 break
-
-    def plot_percolation_grid(self, grid_threshold=0):
-        colors = [(0, 0, 0), (0, 1, 0), (1, 0, 0)]
-        figure = self.plot_grid(grid_threshold=grid_threshold,
-                                colormap=(colors, 3))
-        return figure
 
     def t_percolation_trials(self, trials=1):
         self.number_of_trials = trials

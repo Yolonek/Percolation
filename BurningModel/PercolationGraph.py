@@ -29,7 +29,7 @@ if __name__ == '__main__':
     for index, (dataframe, L) in enumerate(zip(dataframe_list, L_list)):
         axes[0].plot(dataframe['site_prob'], dataframe['perc_prob'],
                      label=f'L = {L}', color=colors[index])
-        total_time = int(np.sum(dataframe['perc_time']))
+        total_time = round(np.sum(dataframe['perc_time']))
         axes[1].plot(dataframe['site_prob'], dataframe['perc_time'],
                      label=f'L = {L}, time = {total_time} s', color=colors[index])
     for index in range(2):

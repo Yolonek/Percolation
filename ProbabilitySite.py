@@ -24,6 +24,9 @@ class ProbabilitySite(object):
     def get_initial_grid(self):
         return self.initial_grid
 
+    def get_current_grid(self):
+        return self.grid
+
     def change_probability(self, probability):
         self.p = probability
 

@@ -16,6 +16,7 @@ class SpanningCluster(ProbabilitySite):
         self.cluster_size_histogram = {}
         self.number_of_trials = 1
         self.trials_array = None
+        self.clusters_concatenated = False
 
     def reset_simulation(self, initial_grid=None):
         self.k = 2
@@ -62,15 +63,17 @@ class SpanningCluster(ProbabilitySite):
         mk_value = self.cluster_size(k_value) + 1
         self.set_cluster_size(k_value, mk_value)
 
-    def concatenate_clusters(self, bigger_k, smaller_k):
+    def concatenate_clusters(self, bigger_k, smaller_k, update_clusters=False):
         bigger_mk = self.cluster_size(bigger_k)
         smaller_mk = self.cluster_size(smaller_k)
         cluster_sum = bigger_mk + smaller_mk + 1
         self.set_cluster_size(bigger_k, cluster_sum)
         self.set_cluster_size(smaller_k, bigger_k, negative=True)
-        # self.grid[np.where(self.grid == smaller_k)] = bigger_k
+        if update_clusters:
+            self.clusters_concatenated = True
+            self.grid[np.where(self.grid == smaller_k)] = bigger_k
 
-    def hk_algorithm_step(self, x_pos, y_pos):
+    def hk_algorithm_step(self, x_pos, y_pos, update_clusters=False):
         self.top_value = self.check_top_value(x_pos, y_pos)
         self.left_value = self.check_left_value(x_pos, y_pos)
         self.mc_steps += 1
@@ -87,12 +90,12 @@ class SpanningCluster(ProbabilitySite):
         elif self.top_value != self.left_value:
             if self.cluster_size(self.top_value) > self.cluster_size(self.left_value):
                 self.grid[x_pos][y_pos] = self.top_value
-                self.concatenate_clusters(self.top_value, self.left_value)
+                self.concatenate_clusters(self.top_value, self.left_value, update_clusters=update_clusters)
             else:
                 self.grid[x_pos][y_pos] = self.left_value
-                self.concatenate_clusters(self.left_value, self.top_value)
+                self.concatenate_clusters(self.left_value, self.top_value, update_clusters=update_clusters)
 
-    def hk_algorithm(self, reset_grid=False, count_histogram=False):
+    def hk_algorithm(self, reset_grid=False, update_clusters=False):
         if reset_grid:
             self.set_initial_grid()
             self.grid_thresholding()
@@ -101,7 +104,7 @@ class SpanningCluster(ProbabilitySite):
         x_values = self.occupied_sites[0]
         y_values = self.occupied_sites[1]
         for x, y in zip(x_values, y_values):
-            self.hk_algorithm_step(x, y)
+            self.hk_algorithm_step(x, y, update_clusters=update_clusters)
 
     def find_biggest_cluster(self):
         biggest_cluster = 0
@@ -120,11 +123,11 @@ class SpanningCluster(ProbabilitySite):
                 else:
                     self.cluster_size_histogram[size] = 1
 
-    def t_spanning_cluster_trials(self, trials=1):
+    def t_spanning_cluster_trials(self, trials=1, update_clusters=False):
         self.number_of_trials = trials
         self.trials_array = np.zeros(trials)
         for trial in range(trials):
-            self.hk_algorithm(reset_grid=True)
+            self.hk_algorithm(reset_grid=True, update_clusters=update_clusters)
             biggest_cluster = self.find_biggest_cluster()
             self.trials_array[trial] = biggest_cluster
             self.convert_cluster_to_histogram()
@@ -140,27 +143,52 @@ class SpanningCluster(ProbabilitySite):
         else:
             return 0
 
+    def count_all_clusters(self):
+        return np.sum(np.array(list(self.cluster_size_histogram.values())))
+
+    def map_random_values_to_clusters(self):
+        grid = self.get_current_grid()
+        unique_values = np.unique(grid)
+        unique_values = unique_values[unique_values != 0]
+        for value in unique_values:
+            grid[grid == value] = np.random.randint(1000, 100000)
+        return grid
+
+    def visualize_clusters(self, ax=None):
+        if ax:
+            grid = self.map_random_values_to_clusters()
+            different_clusters = self.count_all_clusters()
+            biggest_cluster = self.find_biggest_cluster()
+            title = (f'{different_clusters} different clusters'
+                     f'{", concatenated" if self.clusters_concatenated else ""}\n'
+                     f'biggest cluster: {biggest_cluster}, L = {self.L}, p = {self.p}')
+            ax.imshow(grid, vmin=grid.min(), vmax=grid.max(),
+                      cmap='gnuplot', interpolation='nearest')
+            ax.set_title(title)
+            ax.set(xticks=[], yticks=[])
+
+
 
 if __name__ == '__main__':
-    L = 10
+    L = 50
     p = 0.50
     cluster = SpanningCluster(L=L, p=p)
     cluster.grid_thresholding()
-    print(cluster.grid)
     cluster.set_top_left_site()
-    print(cluster.grid)
-    cluster.hk_algorithm()
+    cluster.hk_algorithm(update_clusters=True)
     print(cluster.grid)
     print(cluster.Mk)
     print(cluster.find_biggest_cluster())
     cluster.convert_cluster_to_histogram()
     print(cluster.cluster_size_histogram)
-    cluster.reset_simulation()
-    cluster.grid_thresholding()
-    cluster.set_top_left_site()
-    cluster.hk_algorithm()
-    cluster.convert_cluster_to_histogram()
-    print(cluster.cluster_size_histogram)
+    print(cluster.map_random_values_to_clusters())
+
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    cluster.visualize_clusters(ax=axes)
+    plt.show()
+
+
+
 
 
 
