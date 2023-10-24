@@ -7,7 +7,7 @@ from CommonFunctions import make_directories, check_if_file_exists
 
 if __name__ == '__main__':
     L_list = [100, 50, 10]
-    t = 100
+    t = 10000
     percolation_p = 0.592
 
     results_path = 'results'
@@ -31,7 +31,7 @@ if __name__ == '__main__':
                      label=f'L = {L}', color=colors[index])
         total_time = int(np.sum(dataframe['perc_time']))
         axes[1].plot(dataframe['site_prob'], dataframe['perc_time'],
-                     label=f'L = {L}, time = {total_time}', color=colors[index])
+                     label=f'L = {L}, time = {total_time} s', color=colors[index])
     for index in range(2):
         axes[index].axvline(x=percolation_p, color='black', linestyle='--', label=f'$p_c$ = {percolation_p}')
         axes[index].legend(loc='upper left')
