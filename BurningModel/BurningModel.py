@@ -82,7 +82,7 @@ class BurningModel(ProbabilitySite):
 
     def plot_percolation(self, ax=None, cmap=()):
         if ax:
-            cmap = cmap if cmap else ([(0, 0, 0), (0, 1, 0), (1, 0, 0)], 3)
+            cmap = cmap if cmap else (['#000000', '#00cc00', '#cc0000'], 3)
             grid = self.get_current_grid()
             grid[grid >= 2] = 2
             colors, quality = cmap
@@ -91,11 +91,11 @@ class BurningModel(ProbabilitySite):
                      f'$L = {self.L}$\n Longest path: {self.step} steps, $p = {self.p}$')
             ax.imshow(grid, cmap=cmap, interpolation='nearest')
             ax.set_title(title)
-            ax.axis('off')
+            ax.set(xticks=[], yticks=[])
 
 
 if __name__ == '__main__':
-    L = 50
+    L = 10
     p = [0.5, 0.6, 0.7]
 
     figure, axes = plt.subplots(len(p), 1, layout='constrained')
