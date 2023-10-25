@@ -11,12 +11,12 @@ def get_file_name(L, t, normalized=False):
 
 
 if __name__ == '__main__':
-    L_list = [10]
-    t = 100
+    L_list = [10, 50, 100]
+    t = 10000
     percolation_p = 0.592
     probability_for_histogram = [0.2, 0.3, 0.3, 0.5, percolation_p, 0.6, 0.7, 0.8]
     cluster_histogram_dict = {}
-    normalize = True
+    normalize = False
 
     results_path = 'results'
     make_directories([results_path])

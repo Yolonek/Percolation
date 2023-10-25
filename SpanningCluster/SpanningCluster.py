@@ -153,10 +153,8 @@ class SpanningCluster(ProbabilitySite):
                               reset_histogram=reset_histogram)
             self.convert_cluster_to_histogram()
         if normalize_histogram:
-            print(self.cluster_size_histogram)
             self.cluster_size_histogram = {size: (quantity / trials)
                                            for size, quantity in self.cluster_size_histogram.items()}
-            print(self.cluster_size_histogram)
 
     def get_histogram(self):
         return self.cluster_size_histogram
