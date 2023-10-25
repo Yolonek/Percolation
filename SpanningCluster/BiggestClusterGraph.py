@@ -7,7 +7,7 @@ from CommonFunctions import make_directories, check_if_file_exists
 
 if __name__ == '__main__':
     L_list = [10, 50, 100]
-    t = 10000
+    t = 500
     percolation_p = 0.592
 
     results_path = 'results'

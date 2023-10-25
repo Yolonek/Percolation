@@ -21,15 +21,19 @@ class SpanningCluster(ProbabilitySite):
         self.trials_array = None
         self.clusters_concatenated = False
 
-    def reset_simulation_params(self, initial_grid=None):
+    def reset_simulation_params(self, initial_grid=None, reset_histogram=True):
         self.k = 2
         self.Mk = {f'Mk{self.k}': f'{1}'}
         self.set_initial_grid(initial_grid=initial_grid)
         self.top_value = 0
         self.left_value = 0
         self.mc_steps = 0
-        self.cluster_size_histogram = {}
+        if reset_histogram:
+            self.reset_histogram()
         self.clusters_concatenated = False
+
+    def reset_histogram(self):
+        self.cluster_size_histogram = {}
 
     def set_top_left_site(self):
         initial_value_assigned = False
@@ -103,12 +107,12 @@ class SpanningCluster(ProbabilitySite):
                 self.grid[x_pos][y_pos] = self.left_value
                 self.concatenate_clusters(self.left_value, self.top_value, update_clusters=update_clusters)
 
-    def hk_algorithm(self, reset_grid=False, update_clusters=False, initial_grid=None):
+    def hk_algorithm(self, reset_grid=False, update_clusters=False, initial_grid=None, reset_histogram=True):
         if reset_grid:
             self.set_initial_grid(initial_grid=initial_grid)
             self.grid_thresholding()
             self.set_top_left_site()
-            self.reset_simulation_params()
+            self.reset_simulation_params(reset_histogram=reset_histogram)
         self.find_occupied_sites()
         x_values = self.occupied_sites[0]
         y_values = self.occupied_sites[1]
@@ -139,8 +143,20 @@ class SpanningCluster(ProbabilitySite):
             self.hk_algorithm(reset_grid=True, update_clusters=update_clusters)
             biggest_cluster = self.find_biggest_cluster()
             self.trials_array[trial] = biggest_cluster
+
+    def t_histogram_trials(self, trials=1, update_clusters=False,
+                           reset_histogram=True, normalize_histogram=False):
+        self.number_of_trials = trials
+        for trial in range(trials):
+            self.hk_algorithm(reset_grid=True,
+                              update_clusters=update_clusters,
+                              reset_histogram=reset_histogram)
             self.convert_cluster_to_histogram()
-            self.reset_simulation_params()
+        if normalize_histogram:
+            print(self.cluster_size_histogram)
+            self.cluster_size_histogram = {size: (quantity / trials)
+                                           for size, quantity in self.cluster_size_histogram.items()}
+            print(self.cluster_size_histogram)
 
     def get_histogram(self):
         return self.cluster_size_histogram

@@ -8,7 +8,7 @@ from CommonFunctions import (create_probability_space, make_directories,
 
 
 if __name__ == '__main__':
-    t = 10000
+    t = 500
     L_list = [10, 50, 100]
     percolation_p = 0.592746
     probability_space = create_probability_space(percolation_p)
