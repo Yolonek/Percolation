@@ -45,13 +45,23 @@ class BurningModel(ProbabilitySite):
             self.grid_changed = True
 
     def check_if_percolation_threshold_reached(self):
-        if self.step in self.grid[-1, :]:
+        # if self.step in self.grid[-1, :]:
+        if np.any(self.grid[-1, :] > 1):
             return True
         else:
             return False
 
+    def update_grid_to_given_step(self, step):
+        if step > self.step:
+            while step > self.step:
+                self.another_burning_step()
+        elif step < self.step:
+            while step < self.step:
+                self.step -= 1
+                self.grid[self.grid > self.step] = 1
+
     def burning_model(self, reset_grid=False, break_at_percolation=True, initial_grid=None):
-        if reset_grid:
+        if reset_grid or self.grid is None:
             if initial_grid is not None:
                 self.set_initial_grid(initial_grid=initial_grid)
             else:
@@ -80,22 +90,23 @@ class BurningModel(ProbabilitySite):
         else:
             return 0
 
-    def plot_percolation(self, ax=None, cmap=()):
+    def plot_percolation(self, ax=None, cmap=(), add_title=True, grid=None):
         if ax:
             cmap = cmap if cmap else (['#000000', '#00cc00', '#cc0000'], 3)
-            grid = self.get_current_grid()
+            grid = grid if grid is not None else self.get_current_grid()
             grid[grid >= 2] = 2
             colors, quality = cmap
             cmap = LinearSegmentedColormap.from_list('', colors, N=quality)
-            title = (f'{"Percolation reached" if self.check_if_percolation_threshold_reached() else "No percolation"}. '
-                     f'$L = {self.L}$\n Longest path: {self.step} steps, $p = {self.p}$')
+            if add_title:
+                title = (f'{"Percolation reached" if self.check_if_percolation_threshold_reached() else "No percolation"}. '
+                         f'$L = {self.L}$\n Longest path: {self.step} steps, $p = {self.p}$')
+                ax.set_title(title)
             ax.imshow(grid, cmap=cmap, interpolation='nearest')
-            ax.set_title(title)
             ax.set(xticks=[], yticks=[])
 
 
 if __name__ == '__main__':
-    L = 10
+    L = 1000
     p = [0.5, 0.6, 0.7]
 
     figure, axes = plt.subplots(len(p), 1, layout='constrained')
