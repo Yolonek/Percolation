@@ -45,7 +45,6 @@ class BurningModel(ProbabilitySite):
             self.grid_changed = True
 
     def check_if_percolation_threshold_reached(self):
-        # if self.step in self.grid[-1, :]:
         if np.any(self.grid[-1, :] > 1):
             return True
         else:

@@ -3,12 +3,14 @@ import pandas as pd
 import numpy as np
 import os
 from CommonFunctions import make_directories, check_if_file_exists
+from BiggestCluster import create_file_name
 
 
 if __name__ == '__main__':
     L_list = [10, 50, 100]
-    t = 500
+    t = 10000
     percolation_p = 0.592
+    concatenate_clusters = False
 
     results_path = 'results'
     image_path = 'images'
@@ -16,7 +18,7 @@ if __name__ == '__main__':
     dataframe_list = []
 
     for L in L_list:
-        file_name = f'Dist_L{L}T{t}.csv'
+        file_name = create_file_name(L, t, concatenate=concatenate_clusters)
         file_path = os.path.join(results_path, file_name)
         try:
             cluster_dataframe = pd.read_csv(file_path, sep=',')
