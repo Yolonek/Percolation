@@ -201,7 +201,6 @@ class SpanningCluster(ProbabilitySite):
 if __name__ == '__main__':
     L = 500
     p = [0.4, 0.54, 0.56, 0.58, 0.6, 0.8]
-    # p = [0.56]
     use_one_column = False
     concatenate = True
 
