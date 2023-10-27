@@ -14,7 +14,7 @@ def create_file_name(L, t, concatenate=False):
 
 
 if __name__ == '__main__':
-    t = 1000
+    t = 10000
     L_list = [10, 50, 100]
     percolation_p = 0.592746
     probability_space = create_probability_space(percolation_p)

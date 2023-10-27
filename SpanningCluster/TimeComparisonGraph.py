@@ -1,14 +1,14 @@
 from matplotlib import pyplot as plt
 import pandas as pd
-import numpy as np
+import sys
 import os
 from CommonFunctions import make_directories, check_if_file_exists
 from BiggestCluster import create_file_name
 
 
 if __name__ == '__main__':
-    L = 100
-    t = 500
+    L = 50
+    t = 10000
 
     results_path = 'results'
     image_path = 'images'
@@ -21,8 +21,9 @@ if __name__ == '__main__':
             dataframes[concat] = pd.read_csv(file_path, sep=',')
         except FileNotFoundError:
             print(f'File {file_name} does not exist!')
+            sys.exit()
 
-    colors = ['darkgreen', 'blue']
+    colors = ['red', 'blue']
     figure, axes = plt.subplots(1, 1, layout='constrained')
     for index, (concat, dataframe) in enumerate(dataframes.items()):
         total_time = round(dataframe['clus_time'].sum())

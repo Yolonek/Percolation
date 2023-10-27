@@ -32,6 +32,9 @@ class SpanningCluster(ProbabilitySite):
             self.reset_histogram()
         self.clusters_concatenated = False
 
+    def get_container(self):
+        return self.Mk
+
     def reset_histogram(self):
         self.cluster_size_histogram = {}
 
@@ -156,8 +159,11 @@ class SpanningCluster(ProbabilitySite):
             self.cluster_size_histogram = {size: (quantity / trials)
                                            for size, quantity in self.cluster_size_histogram.items()}
 
-    def get_histogram(self):
-        return self.cluster_size_histogram
+    def get_histogram(self, sort=False):
+        if sort:
+            return dict(sorted(self.cluster_size_histogram.items(), key=lambda x: int(x[0])))
+        else:
+            return self.cluster_size_histogram
 
     def get_average_biggest_cluster(self):
         if self.trials_array is not None:
@@ -177,17 +183,18 @@ class SpanningCluster(ProbabilitySite):
             grid[grid == value] = np.random.randint(1000, 100000)
         return grid
 
-    def visualize_clusters(self, ax=None):
+    def visualize_clusters(self, ax=None, add_title=True):
         if ax:
             grid = self.map_random_values_to_clusters()
             different_clusters = self.count_all_clusters()
             biggest_cluster = self.find_biggest_cluster()
-            title = (f'{different_clusters} different clusters'
-                     f'{", concatenated" if self.clusters_concatenated else ""}\n'
-                     f'biggest cluster: {biggest_cluster}, L = {self.L}, p = {self.p}')
+            if add_title:
+                title = (f'{different_clusters} different clusters'
+                         f'{", concatenated" if self.clusters_concatenated else ""}\n'
+                         f'biggest cluster: {biggest_cluster}, L = {self.L}, p = {self.p}')
+                ax.set_title(title)
             ax.imshow(grid, vmin=grid.min(), vmax=grid.max(),
                       cmap='gnuplot', interpolation='nearest')
-            ax.set_title(title)
             ax.set(xticks=[], yticks=[])
 
 
