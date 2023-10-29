@@ -72,8 +72,8 @@ class ProbabilitySite(object):
 
 
 if __name__ == '__main__':
-    L = 1000
-    p = [0.4, 0.6]
+    L = 30
+    p = [0.3, 0.5, 0.7]
 
     figure, axes = plt.subplots(len(p), 2, layout='constrained')
     probability_grid = ProbabilitySite(L=L)

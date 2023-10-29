@@ -37,6 +37,7 @@ It is recommended to read through these files in listed order.
 </ul>
 
 ## Images
+![](./images/ProbabilitySiteL30p-0.3-0.5-0.7.png)
 ![](./images/ProbabilitySiteL300p-0.3-0.5-0.7.png)
 ![](./BurningModel/images/PercolationGraphL10p-0.5-0.6-0.7.png)
 ![](./BurningModel/images/PercolationGraphL300p-0.5-0.6-0.7.png)
