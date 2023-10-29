@@ -1,7 +1,6 @@
 import numpy as np
 from CommonFunctions import make_directories, check_if_file_exists
 from matplotlib import pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import os
 
 
