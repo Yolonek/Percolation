@@ -20,7 +20,6 @@ def home_page():
     ]
     with open('./Markdowns/HomePagePart1.md', 'r') as file:
         text_to_display = file.read()
-    st.empty()
     st.markdown(text_to_display, unsafe_allow_html=True)
     for image in image_list:
         st.image(image)
@@ -147,4 +146,37 @@ def probability_site_interaction():
                                                        numeric=False,
                                                        vertical=False))
     st.markdown('To see whole `ProbabilitySite` object check section `1.3 Source Code`')
+
+
+def probability_site_source_code():
+    with open('../ProbabilitySite.py', 'r') as file:
+        source_code = file.read()
+    source_code = source_code.split('\n\n\n')
+    imports = source_code[0].split('\n')
+    imports.pop(1)
+    source_code[0] = '\n'.join(imports)
+    source_code = '\n\n\n'.join(source_code[0:2])
+    st.code(source_code)
+
+
+def burning_model_source_code():
+    with open('../BurningModel/BurningModel.py', 'r') as file:
+        source_code = file.read()
+    source_code = source_code.split('\n\n\n')
+    imports = source_code[0].split('\n')
+    imports.pop(3)
+    source_code[0] = '\n'.join(imports)
+    source_code = '\n\n\n'.join(source_code[0:2])
+    st.code(source_code)
+
+
+def spanning_cluster_source_code():
+    with open('../SpanningCluster/SpanningCluster.py', 'r') as file:
+        source_code = file.read()
+    source_code = source_code.split('\n\n\n')
+    imports = source_code[0].split('\n')
+    imports.pop(3)
+    source_code[0] = '\n'.join(imports)
+    source_code = '\n\n\n'.join(source_code[0:2])
+    st.code(source_code)
 

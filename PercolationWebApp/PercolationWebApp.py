@@ -9,19 +9,19 @@ def switch_site(site_name):
     elif site_name == probability_site_1_2:
         probability_site_interaction()
     elif site_name == probability_site_1_3:
-        pass
+        probability_site_source_code()
     elif site_name == burning_model_2_1:
         pass
     elif site_name == burning_model_2_2:
         pass
     elif site_name == burning_model_2_3:
-        pass
+        burning_model_source_code()
     elif site_name == spanning_cluster_3_1:
         pass
     elif site_name == spanning_cluster_3_2:
         pass
     elif site_name == spanning_cluster_3_3:
-        pass
+        spanning_cluster_source_code()
 
 
 contents_str = 'Contents'
@@ -75,6 +75,6 @@ for button in button_list:
         some_button_clicked = True
 if some_button_clicked is False:
     # home_page()
-    switch_site(probability_site_1_2)
+    switch_site(spanning_cluster_3_3)
 
 
