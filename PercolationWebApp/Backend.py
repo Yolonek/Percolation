@@ -1,6 +1,7 @@
 import sys
 sys.path.append('..')
 from ProbabilitySite import ProbabilitySite
+from BurningModel.BurningModel import BurningModel
 from matplotlib import pyplot as plt
 
 
@@ -60,4 +61,47 @@ def compare_probability_site_for_different_p(L=10, probabilities=(0.2, 0.5, 0.8)
         probability_site.change_probability(probability)
         probability_site.grid_thresholding()
         probability_site.plot_grid(initial=False, ax=axes[index + 1], title=f'$p = {probability}$')
+    return figure
+
+
+def burning_model_grid(L=10, p=0.5, numeric=False, initial_grid=None):
+    burning_model = BurningModel(L=L, p=p, initial_grid=initial_grid)
+    burning_model.burning_model()
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    if numeric:
+        burning_model.plot_grid_as_matrix(matrix=burning_model.get_current_grid(), axes=axes)
+    else:
+        burning_model.plot_percolation(ax=axes, add_title=False)
+    axes.set_title(f'Percolation for $L = {L}$ and $p = {p}$')
+    return figure
+
+
+def burning_model_three_stages(L=10, p=0.5, number_of_steps=30):
+    burning_model = BurningModel(L=L, p=p)
+    burning_model.grid_thresholding()
+    figure, axes = plt.subplots(1, 3, layout='constrained')
+
+    burning_model.set_top_row_to_initial_value()
+    burning_model.plot_percolation(ax=axes[0])
+    axes[0].set_title(f'Initial phase\nTop row set on fire')
+
+    for _ in range(number_of_steps):
+        burning_model.another_burning_step()
+    burning_model.plot_percolation(ax=axes[1])
+    axes[1].set_title(f'Grid after {number_of_steps} steps')
+
+    burning_model.burning_model(reset_grid=True, initial_grid=burning_model.get_initial_grid())
+    burning_model.plot_percolation(ax=axes[2])
+    axes[2].set_title(f'Grid after percolation')
+    return figure
+
+
+def burning_model_compare_probability(L=50, p=(0.5, 0.6, 0.7)):
+    figure, axes = plt.subplots(1, len(p), layout='constrained', figsize=(10, 5))
+    probability_grid = BurningModel(L=L)
+    initial_grid = probability_grid.get_initial_grid()
+    for index, probability in enumerate(p):
+        probability_grid.change_probability(probability)
+        probability_grid.burning_model(reset_grid=True, initial_grid=initial_grid)
+        probability_grid.plot_percolation(ax=axes[index])
     return figure

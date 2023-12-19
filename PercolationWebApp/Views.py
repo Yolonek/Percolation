@@ -159,6 +159,57 @@ def probability_site_source_code():
     st.code(source_code)
 
 
+def burning_model_description():
+    st.markdown('### <center>BurningModel Object Description</center>', unsafe_allow_html=True)
+    st.markdown('In this section we take introduced before `ProbabilitySite` object '
+                'and inherit from it to get the grid with occupied and unoccupied sites. '
+                'We begin with importing all necessary modules.')
+    st.code("from BurningModel import BurningModel\n"
+            "from matplotlib import pyplot as plt\n"
+            "import numpy as np")
+    st.markdown("First we create the `BurningModel object. Let's see, "
+                "how the whole percolation process affects our grid numerically:")
+    st.code("L = 10\n"
+            "p = 0.6\n"
+            "burning_model = BurningModel(L=L, p=p)\n"
+            "burning_model.burning_model()\n"
+            "figure1, axes1 = plt.subplots(1, 1, layout='constrained')\n"
+            "burning_model.plot_grid_as_matrix(matrix=burning_model.get_current_grid(), axes=axes1)\n"
+            "axes1.set_title(f'Percolation for $L = {L}$ and $p = {p}$')")
+    st.pyplot(burning_model_grid(L=10, p=0.6, numeric=True))
+    st.markdown("We can see that after each step to occupy neighbours the number increases "
+                "and it gets as far as it can. Thanks to that we can easilly extract the number of steps "
+                "for percolation and if it reached the end of the grid. "
+                "Let's see now how the grid looks after initialization, "
+                "a couple of steps and at the end of the process.")
+    st.code("L = 50\n"
+            "p = 0.65\n"
+            "figure2, axes2 = plt.subplots(1, 3, layout='constrained')\n"
+            "burning_model = BurningModel(L=L, p=p)\n"
+            "burning_model.grid_thresholding()\n\n"
+            "# first graph\n"
+            "burning_model.set_top_row_to_initial_value()\n"
+            "burning_model.plot_percolation(ax=axes2[0])\n"
+            "axes2[0].set_title(f'Initial phase\nTop row set on fire')\n\n"
+            "# second graph\n"
+            "number_of_steps = 30\n"
+            "for _ in range(number_of_steps):\n"
+            "   burning_model.another_burning_step()\n"
+            "burning_model.plot_percolation(ax=axes2[1])\n"
+            "axes2[1].set_title(f'Grid after {number_of_steps} steps')\n\n"
+            "# third graph\n"
+            "burning_model.burning_model(reset_grid=True, initial_grid=burning_model.get_initial_grid())\n"
+            "burning_model.plot_percolation(ax=axes2[2])\n"
+            "axes2[2].set_title(f'Grid after percolation')")
+    st.pyplot(burning_model_three_stages(L=50, p=0.65, number_of_steps=30))
+    st.markdown("Let's see some examples for different probabilities for larger ***L***")
+    for L in [50, 100, 200]:
+        st.pyplot(burning_model_compare_probability(L=L))
+    st.markdown("By repeating the same process many times wee can estimate "
+                "the percolation probability and plot it on a graph.")
+
+
+
 def burning_model_source_code():
     with open('../BurningModel/BurningModel.py', 'r') as file:
         source_code = file.read()
