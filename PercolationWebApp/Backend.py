@@ -4,21 +4,30 @@ from ProbabilitySite import ProbabilitySite
 from matplotlib import pyplot as plt
 
 
-def plot_numeric_probability_grid(L=10):
+def generate_probability_grid(L=10, p=0.5):
+    return ProbabilitySite(L=L, p=p).get_initial_grid()
+
+
+def plot_probability_grid(L=10, numeric=False):
     probability_site = ProbabilitySite(L=L)
     figure, axes = plt.subplots(1, 1, layout='constrained')
     axes.set_title(f'Probability grid generated for $L = {L}$')
-    probability_site.plot_grid_as_matrix(axes=axes)
+    if numeric:
+        probability_site.plot_grid_as_matrix(axes=axes)
+    else:
+        probability_site.plot_grid(initial=True, ax=axes, cmap_name='bone')
     return figure
 
 
-def plot_threshold_grid(L=10, p=0.5):
-    probability_site = ProbabilitySite(L=L, p=p)
+def plot_threshold_grid(L=10, p=0.5, numeric=False, initial_grid=None):
+    probability_site = ProbabilitySite(L=L, p=p, initial_grid=initial_grid)
     probability_site.grid_thresholding()
     figure, axes = plt.subplots(1, 1, layout='constrained')
     axes.set_title(f'Grid after thresholding for probability {p}')
-    probability_site.plot_grid_as_matrix(matrix=probability_site.get_current_grid(),
-                                         axes=axes)
+    if numeric:
+        probability_site.plot_grid_as_matrix(matrix=probability_site.get_current_grid(), axes=axes)
+    else:
+        probability_site.plot_grid(initial=False, ax=axes, cmap_name='bone')
     return figure
 
 

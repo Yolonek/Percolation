@@ -7,14 +7,20 @@ def switch_site(site_name):
     elif site_name == probability_site_1_1:
         probability_site_description()
     elif site_name == probability_site_1_2:
+        probability_site_interaction()
+    elif site_name == probability_site_1_3:
         pass
     elif site_name == burning_model_2_1:
         pass
     elif site_name == burning_model_2_2:
         pass
+    elif site_name == burning_model_2_3:
+        pass
     elif site_name == spanning_cluster_3_1:
         pass
     elif site_name == spanning_cluster_3_2:
+        pass
+    elif site_name == spanning_cluster_3_3:
         pass
 
 
@@ -23,20 +29,23 @@ home_page_str = 'Home Page'
 
 probability_site_1 = '1. Probability Site'
 probability_site_1_1 = '1.1 Description'
-probability_site_1_2 = '1.2 Source Code'
+probability_site_1_2 = '1.2 Interaction'
+probability_site_1_3 = '1.3 Source Code'
 
 burning_model_2 = '2. Burning Model'
 burning_model_2_1 = '2.1 Description'
-burning_model_2_2 = '2.2 Source Code'
+burning_model_2_2 = '2.2 Interaction'
+burning_model_2_3 = '2.3 Source Code'
 
 spanning_cluster_3 = '3. Spanning Cluster'
 spanning_cluster_3_1 = '3.1 Description'
-spanning_cluster_3_2 = '3.2 Source Code'
+spanning_cluster_3_2 = '3.2 Interaction'
+spanning_cluster_3_3 = '3.3 Source Code'
 
 button_list = [home_page_str,
-               probability_site_1_1, probability_site_1_2,
-               burning_model_2_1, burning_model_2_2,
-               spanning_cluster_3_1, spanning_cluster_3_2]
+               probability_site_1_1, probability_site_1_2, probability_site_1_3,
+               burning_model_2_1, burning_model_2_2, burning_model_2_3,
+               spanning_cluster_3_1, spanning_cluster_3_2, spanning_cluster_3_3]
 
 for button in button_list:
     st.session_state[button] = False
@@ -46,15 +55,15 @@ with st.sidebar:
     if st.button(home_page_str):
         st.session_state[home_page_str] = True
     with st.expander(probability_site_1):
-        for button in [probability_site_1_1, probability_site_1_2]:
+        for button in button_list[1:4]:
             if st.button(button):
                 st.session_state[button] = True
     with st.expander(burning_model_2):
-        for button in [burning_model_2_1, burning_model_2_2]:
+        for button in button_list[4:7]:
             if st.button(button):
                 st.session_state[button] = True
     with st.expander(spanning_cluster_3):
-        for button in [spanning_cluster_3_1, spanning_cluster_3_2]:
+        for button in button_list[7:]:
             if st.button(button):
                 st.session_state[button] = True
 
@@ -66,6 +75,6 @@ for button in button_list:
         some_button_clicked = True
 if some_button_clicked is False:
     # home_page()
-    switch_site('1.1 Description')
+    switch_site(probability_site_1_2)
 
 
