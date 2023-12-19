@@ -38,8 +38,10 @@ class ProbabilitySite(object):
         self.grid = self.grid.astype(int)
         self.step = 1
 
-    def plot_grid_as_matrix(self, matrix=None, axes=None):
+    def plot_grid_as_matrix(self, matrix=None, axes=None, title=''):
         if axes:
+            if title:
+                axes.set_title(title)
             axes.axis('off')
             matrix = np.round(np.array(matrix if matrix is not None else self.initial_grid), 4)
 

@@ -66,7 +66,7 @@ def probability_site_description():
             r"figure3.suptitle(f'Visual representation of ${L}' + r'\times' + f'{L}$ grid\n$p = {probability}$')" +
             "\nprobability_site.plot_grid(initial=True, ax=axes3[0], title='before thresholding', cmap_name='bone')\n"
             "probability_site.plot_grid(initial=False, ax=axes3[1], title='after thresholding', cmap_name='bone')")
-    st.pyplot(plot_grid_comparison_after_threshold(L=50, p=0.6))
+    st.pyplot(plot_grid_comparison_after_threshold(L=50, p=0.6, numeric=False))
     st.markdown('We can also see how the grid looks for different values of ***p***:')
     st.code("figure4, axes4 = plt.subplots(2, 2, layout='constrained')\n"
             "axes4 = axes4.ravel()\n"
@@ -92,29 +92,59 @@ def probability_site_interaction():
             st.session_state.figure_1 = None
         if 'initial_L_1' not in st.session_state:
             st.session_state.initial_L_1 = None
-        L_1 = numeric_tab.number_input('System size', min_value=2, max_value=14, value=10, step=2, key='size1_num')
-        if st.session_state.initial_L_1 != L_1:
-            st.session_state.initial_L_1 = L_1
-            st.session_state.figure_1 = plot_probability_grid(L=L_1, numeric=True)
+        L_1_num = numeric_tab.number_input('System size', min_value=2, max_value=14, value=10, step=2, key='size1_num')
+        if st.session_state.initial_L_1 != L_1_num:
+            st.session_state.initial_L_1 = L_1_num
+            st.session_state.figure_1 = plot_probability_grid(L=L_1_num, numeric=True)
         st.pyplot(st.session_state.figure_1)
 
-        prob_col, l_col = st.columns(2)
-        probability = prob_col.slider('Probability', min_value=0., max_value=1., value=0.5, step=0.01, key='prob1_num')
+        prob_col_num, l_col_num = st.columns(2)
+        probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
+                                              value=0.5, step=0.01, key='prob1_num')
 
-        L = 10
+        L_num = 10
         if 'initial_L_2' not in st.session_state:
-            st.session_state.initial_L_2 = L
+            st.session_state.initial_L_2 = L_num
         if 'initial_grid_2' not in st.session_state:
-            st.session_state.initial_grid_2 = None
-        L = l_col.number_input('System size', min_value=2, max_value=20, value=L, key='size2_num')
-        if st.session_state.initial_L_2 != L:
-            st.session_state.initial_L_2 = L
-            st.session_state.initial_grid_2 = generate_probability_grid(L=L, p=probability)
-        st.pyplot(plot_threshold_grid(L=L, p=probability, numeric=True, initial_grid=st.session_state.initial_grid))
+            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num, p=probability_num)
+        L_num = l_col_num.number_input('System size', min_value=2, max_value=20, value=L_num, key='size2_num')
+        if st.session_state.initial_L_2 != L_num:
+            st.session_state.initial_L_2 = L_num
+            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num, p=probability_num)
+        st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_2,
+                                                       p=probability_num,
+                                                       initial_grid=st.session_state.initial_grid_2,
+                                                       numeric=True,
+                                                       vertical=True))
 
     with imshow_tab:
-        # L_1 = st.number_input('System ssize', min_value=2, max_value=14, value=10, step=2, key='size1_im')
-        # st.pyplot
-        pass
+        if 'figure_3' not in st.session_state:
+            st.session_state.figure_3 = None
+        if 'initial_L_3' not in st.session_state:
+            st.session_state.initial_L_3 = None
+        L_1_im = imshow_tab.number_input('System size', min_value=10, max_value=500, value=50, step=10, key='size1_im')
+        if st.session_state.initial_L_3 != L_1_im:
+            st.session_state.initial_L_3 = L_1_im
+            st.session_state.figure_3 = plot_probability_grid(L=L_1_im, numeric=False)
+        st.pyplot(st.session_state.figure_3)
 
+        prob_col_im, l_col_im = st.columns(2)
+        probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
+                                            value=0.5, step=0.01, key='prob1_im')
+
+        L_im = 50
+        if 'initial_L_4' not in st.session_state:
+            st.session_state.initial_L_4 = L_im
+        if 'initial_grid_4' not in st.session_state:
+            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im, p=probability_im)
+        L_im = l_col_im.number_input('System size', min_value=10, max_value=500, value=50, step=10, key='size2_im')
+        if st.session_state.initial_L_4 != L_im:
+            st.session_state.initial_L_4 = L_im
+            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im, p=probability_im)
+        st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_4,
+                                                       p=probability_im,
+                                                       initial_grid=st.session_state.initial_grid_4,
+                                                       numeric=False,
+                                                       vertical=False))
+    st.markdown('To see whole `ProbabilitySite` object check section `1.3 Source Code`')
 

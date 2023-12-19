@@ -31,13 +31,22 @@ def plot_threshold_grid(L=10, p=0.5, numeric=False, initial_grid=None):
     return figure
 
 
-def plot_grid_comparison_after_threshold(L=10, p=0.5):
-    probability_site = ProbabilitySite(L=L, p=p)
+def plot_grid_comparison_after_threshold(L=10, p=0.5, numeric=False, vertical=False, initial_grid=None):
+    probability_site = ProbabilitySite(L=L, p=p, initial_grid=initial_grid)
     probability_site.grid_thresholding()
-    figure, axes = plt.subplots(1, 2, layout='constrained')
+    if vertical:
+        figure, axes = plt.subplots(2, 1, layout='constrained', figsize=(6, 10))
+    else:
+        figure, axes = plt.subplots(1, 2, layout='constrained')
     figure.suptitle(f'Visual representation of ${L}' + r'\times' + f'{L}$ grid\n$p = {p}$')
-    probability_site.plot_grid(initial=True, ax=axes[0], title='before thresholding', cmap_name='bone')
-    probability_site.plot_grid(initial=False, ax=axes[1], title='after thresholding', cmap_name='bone')
+    if numeric:
+        probability_site.plot_grid_as_matrix(matrix=probability_site.get_initial_grid(), axes=axes[0],
+                                             title='before thresholding')
+        probability_site.plot_grid_as_matrix(matrix=probability_site.get_current_grid(), axes=axes[1],
+                                             title='after thresholding')
+    else:
+        probability_site.plot_grid(initial=True, ax=axes[0], title='before thresholding', cmap_name='bone')
+        probability_site.plot_grid(initial=False, ax=axes[1], title='after thresholding', cmap_name='bone')
     return figure
 
 
