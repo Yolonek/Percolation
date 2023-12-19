@@ -1,10 +1,21 @@
-import streamlit as st
-from Views import home_page
+from Views import *
 
 
-def probability_site_window():
-    st.empty()
-    st.title('Probability Site')
+def switch_site(site_name):
+    if site_name == home_page_str:
+        home_page()
+    elif site_name == probability_site_1_1:
+        probability_site_description()
+    elif site_name == probability_site_1_2:
+        pass
+    elif site_name == burning_model_2_1:
+        pass
+    elif site_name == burning_model_2_2:
+        pass
+    elif site_name == spanning_cluster_3_1:
+        pass
+    elif site_name == spanning_cluster_3_2:
+        pass
 
 
 contents_str = 'Contents'
@@ -51,10 +62,10 @@ with st.sidebar:
 some_button_clicked = False
 for button in button_list:
     if st.session_state[button]:
-        st.empty()
-        st.write(f'this is {button}')
+        switch_site(button)
         some_button_clicked = True
 if some_button_clicked is False:
-    home_page()
+    # home_page()
+    switch_site('1.1 Description')
 
 
