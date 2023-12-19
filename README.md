@@ -57,4 +57,5 @@ It is recommended to read through these files in listed order.
     <li>Use less loops to speed up computation</li>
     <li>Create simple GUI to make a better way to provide parameters</li>
     <li>Try to speedup computation using numba</li>
+    <li>Create a simple app presenting the code using streamlit</li>
 </ul>

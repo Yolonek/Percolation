@@ -9,6 +9,7 @@ numpy = "==1.23.2"
 pandas = "==2.1.0"
 jupyterlab = "==4.0.6"
 jupyterlab-widgets = "==3.0.9"
+streamlit = "1.29.0"
 
 [dev-packages]
 
