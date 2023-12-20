@@ -1,5 +1,6 @@
 import streamlit as st
 from Backend import *
+import pandas as pd
 
 
 def home_page():
@@ -207,6 +208,33 @@ def burning_model_description():
         st.pyplot(burning_model_compare_probability(L=L))
     st.markdown("By repeating the same process many times wee can estimate "
                 "the percolation probability and plot it on a graph.")
+    st.code("def plot_percolation_probability(L=10, t=15):\n"
+            "   percolation_probability = 0.592\n"
+            "   burning_model_mean = BurningModel(L=L)\n"
+            "   probability_space = np.linspace(0.45, 0.8, 15)\n"
+            "   percolation_space = np.zeros(len(probability_space))\n"
+            "   for index, probability in enumerate(probability_space):\n"
+            "       burning_model_mean.change_probability(probability)\n"
+            "       burning_model_mean.t_percolation_trials(trials=t)\n"
+            "       percolation_space[index] = burning_model_mean.get_percolation_probability()\n\n"
+            "   figure, axes = plt.subplots(1, 1, layout='constrained')\n"
+            "   axes.plot(probability_space, percolation_space, color='black')\n"
+            "             axes.axvline(x=percolation_probability, \n"
+            "             color='blue', \n"
+            "             linestyle='--', \n"
+            "             label=f'$p_c$ = {percolation_probability}')\n"
+            "   axes.grid()\n"
+            "   axes.legend(loc='upper left')\n"
+            "   axes.set_title(f'Percolation probability based on {t} number of trials')\n"
+            "   axes.set(xlabel='site probability', ylabel='percolation probability')")
+    st.code("plot_percolation_probability(L=20, t=20)")
+    st.pyplot(burning_model_percolation_plot(L=20, trials=200))
+    st.markdown('Graph generated for larger parameters is located below. '
+                'We can see that for larger ***L*** line gets steeper. '
+                'Theoretically for $L = \infty$ it is a vertical line.')
+    st.image('../BurningModel/images/PercolationPlotT10000L-100-50-10.png')
+    st.markdown('For interactive plots check section `2.2 Interaction`.')
+
 
 
 

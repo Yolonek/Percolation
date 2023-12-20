@@ -3,6 +3,7 @@ sys.path.append('..')
 from ProbabilitySite import ProbabilitySite
 from BurningModel.BurningModel import BurningModel
 from matplotlib import pyplot as plt
+import numpy as np
 
 
 def generate_probability_grid(L=10, p=0.5):
@@ -97,11 +98,34 @@ def burning_model_three_stages(L=10, p=0.5, number_of_steps=30):
 
 
 def burning_model_compare_probability(L=50, p=(0.5, 0.6, 0.7)):
-    figure, axes = plt.subplots(1, len(p), layout='constrained', figsize=(10, 5))
+    figure, axes = plt.subplots(1, len(p), layout='constrained')
     probability_grid = BurningModel(L=L)
     initial_grid = probability_grid.get_initial_grid()
     for index, probability in enumerate(p):
         probability_grid.change_probability(probability)
         probability_grid.burning_model(reset_grid=True, initial_grid=initial_grid)
         probability_grid.plot_percolation(ax=axes[index])
+        axes[index].title.set_size(8)
+    return figure
+
+
+def burning_model_percolation_plot(L=50, trials=100):
+    percolation_probability = 0.592
+    burning_model_mean = BurningModel(L=L)
+    probability_space = np.linspace(0.45, 0.8, 15)
+    percolation_space = np.zeros(len(probability_space))
+    for index, probability in enumerate(probability_space):
+        burning_model_mean.change_probability(probability)
+        burning_model_mean.t_percolation_trials(trials=trials)
+        percolation_space[index] = burning_model_mean.get_percolation_probability()
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    axes.plot(probability_space, percolation_space, color='black', label=f'L={L}')
+    axes.axvline(x=percolation_probability,
+                 color='blue',
+                 linestyle='--',
+                 label=f'$p_c$ = {percolation_probability}')
+    axes.grid()
+    axes.legend(loc='upper left')
+    axes.set_title(f'Percolation probability based on {trials} number of trials')
+    axes.set(xlabel='site probability', ylabel='percolation probability')
     return figure
