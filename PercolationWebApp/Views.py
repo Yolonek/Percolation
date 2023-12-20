@@ -236,6 +236,59 @@ def burning_model_description():
     st.markdown('For interactive plots check section `2.2 Interaction`.')
 
 
+def burning_model_interaction():
+    st.markdown('### <center>BurningModel Object Interaction</center>', unsafe_allow_html=True)
+    st.markdown('In this section you see how percolation process works based on given probability. '
+                'Plots are the same as the ones shown in section `2.1 Description`.')
+
+    imshow_tab, numeric_tab, plot_tab = st.tabs(['Image', 'Numeric', 'Plot'])
+    with imshow_tab:
+        L_im = 50
+        probability_im = 0.5
+        if 'initial_L_im_bm' not in st.session_state:
+            st.session_state.initial_L_im_bm = L_im
+        if 'initial_grid_im_bm' not in st.session_state:
+            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im, p=probability_im)
+        L_im = st.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
+        prob_col_im, step_col_im = st.columns(2)
+        probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
+                                            value=0.5, step=0.01, key='prob1_im')
+        step_im = step_col_im.slider('Step', min_value=2, max_value=600, value=2, step=1, key='step1_im')
+        if st.session_state.initial_L_im_bm != L_im:
+            st.session_state.initial_L_im_bm = L_im
+            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im, p=probability_im)
+        st.pyplot(burning_model_percolation_interaction(L=L_im,
+                                                        p=probability_im,
+                                                        step=step_im,
+                                                        initial_grid=st.session_state.initial_grid_im_bm))
+    with numeric_tab:
+        L_num = 10
+        probability_num = 0.5
+        if 'initial_L_num_bm' not in st.session_state:
+            st.session_state.initial_L_num_bm = L_num
+        if 'initial_grid_num_bm' not in st.session_state:
+            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num, p=probability_num)
+        L_num = st.number_input('System size', min_value=2, max_value=14, value=L_num, step=1, key='size1_num')
+        prob_col_num, step_col_num = st.columns(2)
+        probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
+                                              value=0.5, step=0.01, key='prob1_num')
+        step_num = step_col_num.slider('Step', min_value=2, max_value=80, value=2, step=1, key='step1_num')
+        if st.session_state.initial_L_num_bm != L_num:
+            st.session_state.initial_L_num_bm = L_num
+            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num, p=probability_num)
+        st.pyplot(burning_model_percolation_interaction(L=L_num,
+                                                        p=probability_num,
+                                                        step=step_num,
+                                                        initial_grid=st.session_state.initial_grid_num_bm,
+                                                        numeric=True))
+    with plot_tab:
+        size_col_plot, t_col_plot = st.columns(2)
+        L_plot = size_col_plot.number_input('System size', min_value=2, max_value=100,
+                                            value=L_num, step=2, key='size1_plot')
+        t_plot = t_col_plot.slider('Number of trials', min_value=10, max_value=200,
+                                   value=50, step=10, key='trials1_plot')
+        st.markdown('Warning. Simulation takes some time for larger parameters.')
+        st.pyplot(burning_model_percolation_plot(L=L_plot, trials=t_plot))
 
 
 def burning_model_source_code():

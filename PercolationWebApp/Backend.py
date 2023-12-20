@@ -129,3 +129,19 @@ def burning_model_percolation_plot(L=50, trials=100):
     axes.set_title(f'Percolation probability based on {trials} number of trials')
     axes.set(xlabel='site probability', ylabel='percolation probability')
     return figure
+
+
+def burning_model_percolation_interaction(L=50, p=0.5, step=2, numeric=False, initial_grid=None):
+    model = BurningModel(L=L, p=p, initial_grid=initial_grid)
+    model.grid_thresholding()
+    model.set_top_row_to_initial_value()
+    for _ in range(step - 2):
+        model.another_burning_step()
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    if numeric:
+        title = (f'{"Percolation reached" if model.check_if_percolation_threshold_reached() else "No percolation"}. '
+                 f'$L = {model.L}$\n Longest path: {model.step} steps, $p = {model.p}$')
+        model.plot_grid_as_matrix(matrix=model.get_current_grid(), axes=axes, title=title)
+    else:
+        model.plot_percolation(ax=axes)
+    return figure

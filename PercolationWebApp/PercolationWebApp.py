@@ -13,7 +13,7 @@ def switch_site(site_name):
     elif site_name == burning_model_2_1:
         burning_model_description()
     elif site_name == burning_model_2_2:
-        pass
+        burning_model_interaction()
     elif site_name == burning_model_2_3:
         burning_model_source_code()
     elif site_name == spanning_cluster_3_1:
@@ -75,6 +75,6 @@ for button in button_list:
         some_button_clicked = True
 if some_button_clicked is False:
     # home_page()
-    switch_site(burning_model_2_1)
+    switch_site(burning_model_2_2)
 
 
