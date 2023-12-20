@@ -8,8 +8,8 @@ from time import time
 
 class SpanningCluster(ProbabilitySite):
 
-    def __init__(self, L=100, p=0.5):
-        super().__init__(L=L, p=p)
+    def __init__(self, L=100, p=0.5, initial_grid=None):
+        super().__init__(L=L, p=p, initial_grid=initial_grid)
         self.k = 2
         self.Mk = {f'Mk{self.k}': f'{1}'}
         self.top_value = 0
@@ -161,7 +161,7 @@ class SpanningCluster(ProbabilitySite):
 
     def get_histogram(self, sort=False):
         if sort:
-            return dict(sorted(self.cluster_size_histogram.items(), key=lambda x: int(x[0])))
+            return dict(sorted(self.cluster_size_histogram.items(), key=lambda x: int(x[1])))
         else:
             return self.cluster_size_histogram
 

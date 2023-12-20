@@ -106,11 +106,11 @@ def probability_site_interaction():
         if 'initial_L_2' not in st.session_state:
             st.session_state.initial_L_2 = L_num
         if 'initial_grid_2' not in st.session_state:
-            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num, p=probability_num)
+            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num)
         L_num = l_col_num.number_input('System size', min_value=2, max_value=20, value=L_num, key='size2_num')
         if st.session_state.initial_L_2 != L_num:
             st.session_state.initial_L_2 = L_num
-            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num, p=probability_num)
+            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num)
         st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_2,
                                                        p=probability_num,
                                                        initial_grid=st.session_state.initial_grid_2,
@@ -136,11 +136,11 @@ def probability_site_interaction():
         if 'initial_L_4' not in st.session_state:
             st.session_state.initial_L_4 = L_im
         if 'initial_grid_4' not in st.session_state:
-            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im, p=probability_im)
+            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im)
         L_im = l_col_im.number_input('System size', min_value=10, max_value=500, value=50, step=10, key='size2_im')
         if st.session_state.initial_L_4 != L_im:
             st.session_state.initial_L_4 = L_im
-            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im, p=probability_im)
+            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im)
         st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_4,
                                                        p=probability_im,
                                                        initial_grid=st.session_state.initial_grid_4,
@@ -248,7 +248,7 @@ def burning_model_interaction():
         if 'initial_L_im_bm' not in st.session_state:
             st.session_state.initial_L_im_bm = L_im
         if 'initial_grid_im_bm' not in st.session_state:
-            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im, p=probability_im)
+            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im)
         L_im = st.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
         prob_col_im, step_col_im = st.columns(2)
         probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
@@ -256,7 +256,7 @@ def burning_model_interaction():
         step_im = step_col_im.slider('Step', min_value=2, max_value=600, value=2, step=1, key='step1_im')
         if st.session_state.initial_L_im_bm != L_im:
             st.session_state.initial_L_im_bm = L_im
-            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im, p=probability_im)
+            st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im)
         st.pyplot(burning_model_percolation_interaction(L=L_im,
                                                         p=probability_im,
                                                         step=step_im,
@@ -267,7 +267,7 @@ def burning_model_interaction():
         if 'initial_L_num_bm' not in st.session_state:
             st.session_state.initial_L_num_bm = L_num
         if 'initial_grid_num_bm' not in st.session_state:
-            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num, p=probability_num)
+            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num)
         L_num = st.number_input('System size', min_value=2, max_value=14, value=L_num, step=1, key='size1_num')
         prob_col_num, step_col_num = st.columns(2)
         probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
@@ -275,7 +275,7 @@ def burning_model_interaction():
         step_num = step_col_num.slider('Step', min_value=2, max_value=80, value=2, step=1, key='step1_num')
         if st.session_state.initial_L_num_bm != L_num:
             st.session_state.initial_L_num_bm = L_num
-            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num, p=probability_num)
+            st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num)
         st.pyplot(burning_model_percolation_interaction(L=L_num,
                                                         p=probability_num,
                                                         step=step_num,
@@ -300,6 +300,110 @@ def burning_model_source_code():
     source_code[0] = '\n'.join(imports)
     source_code = '\n\n\n'.join(source_code[0:2])
     st.code(source_code)
+
+
+def spanning_cluster_description():
+    st.markdown('### <center>SpanningCluster Object Description</center>', unsafe_allow_html=True)
+    st.markdown('In this section we take introduced before `ProbabilitySite` object '
+                'and inherit from it to get the grid with occupied and unoccupied sites. '
+                'We begin with importing all necessary modules.')
+    st.code("from SpanningCluster import SpanningCluster\n"
+            "from matplotlib import pyplot as plt\n"
+            "import numpy as np")
+    st.markdown('First of all, we can set labeling all squares with reverse updates or without them. '
+                'The advantege of reverse updates is that it allows to make much better looking visualizations, '
+                'but it slows down the simulation. Below we define both approaches.')
+    st.code("L = 20\n"
+            "p = 0.54\n"
+            "spanning_cluster = SpanningCluster(L=L, p=p)\n"
+            "initial_grid = spanning_cluster.get_initial_grid()\n"
+            "spanning_cluster.hk_algorithm(reset_grid=True, update_clusters=False, initial_grid=initial_grid)\n"
+            "cluster_1 = spanning_cluster.get_current_grid()\n"
+            "spanning_cluster.hk_algorithm(reset_grid=True, update_clusters=True, initial_grid=initial_grid)\n"
+            "cluster_2 = spanning_cluster.get_current_grid()")
+    st.code("figure1, axes1 = plt.subplots(2, 1, layout='constrained')\n"
+            "spanning_cluster.plot_grid_as_matrix(matrix=cluster_1, axes=axes1[0])\n" +
+            r"axes1[0].set_title(f'$L = {L}$\nClustering without concatenating')" +
+            "\nspanning_cluster.plot_grid_as_matrix(matrix=cluster_2, axes=axes1[1])\n"
+            "axes1[1].set_title('Clustering with concatenating')")
+    st.pyplot(spanning_cluster_concat_comparison_numeric(L=15, p=0.54))
+    st.markdown("The main difference we can notice is that on the first graph we can see "
+                "two distinct numbers next to each other, while on the second one that's not the case, "
+                "because every adjacent cluster was relabelled.")
+    st.markdown("Now let's see how we store calculated values after HK algorithm and compare it to the grid.")
+    st.code("L = 10\n"
+            "panning_cluster = SpanningCluster(L=L, p=p)\n"
+            "spanning_cluster.hk_algorithm(reset_grid=True, update_clusters=False)\n"
+            "for key, value in spanning_cluster.get_container().items():\n"
+            "   print(f'{key}: {value}')\n"
+            "figure2, axes2 = plt.subplots(1, 1, layout='constrained')\n"
+            "spanning_cluster.plot_grid_as_matrix(matrix=spanning_cluster.get_current_grid(), axes=axes2)")
+    st.code("spanning_cluster.convert_cluster_to_histogram()\n"
+            "print(spanning_cluster.get_histogram(sort=True))")
+    bin_column, plot_column = st.columns([1, 3])
+    fig, container, histogram = spanning_cluster_clustering_plot(L=10,
+                                                                 p=0.54,
+                                                                 numeric=True,
+                                                                 return_bins=True,
+                                                                 update_clusters=False)
+    with bin_column:
+        st.write('Container:')
+        st.write(container)
+        st.write('Histogram:')
+        st.write(histogram)
+    with plot_column:
+        fig.set_size_inches(4, 5)
+        st.pyplot(fig)
+    st.markdown("By checking values in the container we can deduce exactly which clusters where joined to another one. "
+                "They are marked as $-k_i$. We can also convert acquired container into histogram.")
+    st.markdown("And now let's see the histogram for a bigger grid:")
+    large_histogram = spanning_cluster_generate_histogram(L=50, p=0.54)
+    st.write(large_histogram)
+    st.markdown("Now we can visualize what exactly happens after HK algorithm to 2D grid. "
+                "Let's see first the difference between concatenated and not concatenated graphs.")
+    st.code("spanning_cluster = SpanningCluster(L=30)\n"
+            "initial_grid = spanning_cluster.get_initial_grid()\n"
+            "probabilities = [0.5, 0.6, 0.7]")
+    st.code("figure3, axes3 = plt.subplots(len(probabilities), 2, layout='constrained')\n"
+            "for x, probability in enumerate(probabilities):\n"
+            "   for y, bool_value in enumerate([False, True]):\n"
+            "       spanning_cluster.change_probability(probability)\n"
+            "       spanning_cluster.hk_algorithm(reset_grid=True, update_clusters=bool_value, "
+            "initial_grid=initial_grid)\n"
+            "       spanning_cluster.visualize_clusters(ax=axes3[x][y], add_title=False)\n" +
+            r"figure3.suptitle(f'Visualized grid. Left side is not concatenated, right side is.\n'" + "\n" +
+            r"                 f'Probabilities: {" + "','" + ".join(list(map(str, probabilities)))}')")
+    L_1 = 60
+    initial_grid = generate_probability_grid(L=L_1)
+    fig1 = spanning_cluster_concat_comparison_image(L=L_1, p=0.5, initial_grid=initial_grid)
+    fig1.suptitle(f'Visualized grid. Left side is not concatenated, right side is.\n'
+                  f'Probabilities: {[0.5, 0.6, 0.7]}')
+    st.pyplot(fig1)
+    st.pyplot(spanning_cluster_concat_comparison_image(L=L_1, p=0.6, initial_grid=initial_grid))
+    st.pyplot(spanning_cluster_concat_comparison_image(L=L_1, p=0.7, initial_grid=initial_grid))
+    st.markdown("We can see that we have different colors next to each other in graphs on the left. "
+                "This happens because they are labelled with different number "
+                "and information about them being concatenated is hidden in the container. "
+                "On the right side we have better visualizations with each cluster "
+                "separated by a black color, but it takes additional computational time.")
+    st.markdown("Below we can see how much of a difference concatenating clusters can make.")
+    st.image('../SpanningCluster/images/TimeComparisonGraphT10000L100.png')
+    st.markdown("Let's see how clustering looks for larger system size:")
+    st.pyplot(visualize_clustered_grid(L=200, p=0.54, concatenated=True))
+    st.markdown("Now based on many repetitions we can estimate the size of the biggest cluster for each probability, "
+                "the same way as we calculated percolation probability in previous part of the project.")
+    st.markdown(calculate_average_biggest_cluster(L=100, p=0.54, trials=100))
+    st.markdown("Below we can see graphs for larger parameters:")
+    st.image('../SpanningCluster/images/AverageClusterGraphT10000L-10-50-100.png')
+    st.markdown("And last but not least we can create a histogram over many repetitions for given probability.")
+    st.pyplot(spanning_cluster_average_cluster_size(L=50, p=0.7, trials=500))
+    st.markdown("And below we can see a graph calculated for larger ***L*** and many trials.")
+    st.image('../SpanningCluster/images/ClusterSizeDistributionGraphT10000L100.png')
+    st.markdown("And some other generated graphics:")
+    st.image('../SpanningCluster/images/HKVisualizationL500p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png')
+    st.image('../SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png')
+    st.markdown('For interactive plots check section `3.2 Interaction`.')
+
 
 
 def spanning_cluster_source_code():

@@ -2,12 +2,13 @@ import sys
 sys.path.append('..')
 from ProbabilitySite import ProbabilitySite
 from BurningModel.BurningModel import BurningModel
+from SpanningCluster.SpanningCluster import SpanningCluster
 from matplotlib import pyplot as plt
 import numpy as np
 
 
-def generate_probability_grid(L=10, p=0.5):
-    return ProbabilitySite(L=L, p=p).get_initial_grid()
+def generate_probability_grid(L=10):
+    return ProbabilitySite(L=L).get_initial_grid()
 
 
 def plot_probability_grid(L=10, numeric=False):
@@ -145,3 +146,87 @@ def burning_model_percolation_interaction(L=50, p=0.5, step=2, numeric=False, in
     else:
         model.plot_percolation(ax=axes)
     return figure
+
+
+def spanning_cluster_concat_comparison_numeric(L=20, p=0.5, initial_grid=None):
+    model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
+    initial_grid = initial_grid if initial_grid is not None else model.get_initial_grid()
+    model.hk_algorithm(reset_grid=True, update_clusters=False, initial_grid=initial_grid)
+    cluster_1 = model.get_current_grid()
+    model.hk_algorithm(reset_grid=True, update_clusters=True, initial_grid=initial_grid)
+    cluster_2 = model.get_current_grid()
+    figure, axes = plt.subplots(1, 2, layout='constrained', figsize=(6, 3))
+    model.plot_grid_as_matrix(matrix=cluster_1, axes=axes[0])
+    model.plot_grid_as_matrix(matrix=cluster_2, axes=axes[1])
+    axes[0].set_title(f'$L = {L}$\nClustering without concatenating')
+    axes[1].set_title(f'$L = {L}$\nClustering with concatenating')
+    return figure
+
+
+def spanning_cluster_clustering_plot(L=20, p=0.5, numeric=False, initial_grid=None,
+                                     return_bins=False, update_clusters=False):
+    model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
+    model.hk_algorithm(reset_grid=True, update_clusters=update_clusters)
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    if numeric:
+        model.plot_grid_as_matrix(matrix=model.get_current_grid(), axes=axes)
+    if return_bins:
+        model.convert_cluster_to_histogram()
+        return figure, model.get_container(), model.get_histogram(sort=True)
+    else:
+        return figure
+
+
+def spanning_cluster_generate_histogram(L=20, p=0.5, initial_grid=None):
+    model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
+    model.hk_algorithm(reset_grid=True, update_clusters=False)
+    model.convert_cluster_to_histogram()
+    return model.get_histogram(sort=True)
+
+
+def spanning_cluster_concat_comparison_image(L=20, p=0.5, initial_grid=None, add_title=False):
+    figure, axes = plt.subplots(1, 2, layout='constrained')
+    model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
+    initial_grid = initial_grid if initial_grid is not None else model.get_initial_grid()
+    model.hk_algorithm(reset_grid=True, update_clusters=False, initial_grid=initial_grid)
+    model.visualize_clusters(ax=axes[0], add_title=add_title)
+    model.hk_algorithm(reset_grid=True, update_clusters=True, initial_grid=initial_grid)
+    model.visualize_clusters(ax=axes[1], add_title=add_title)
+    return figure
+
+
+def visualize_clustered_grid(L=50, p=0.5, concatenated=True, initial_grid=None):
+    model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
+    model.hk_algorithm(reset_grid=True,
+                       update_clusters=concatenated)
+    model.convert_cluster_to_histogram()
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    model.visualize_clusters(ax=axes, add_title=True)
+    return figure
+
+
+def calculate_average_biggest_cluster(L=20, p=0.5, trials=100):
+    cluster = SpanningCluster(L=L, p=p)
+    cluster.t_spanning_cluster_trials(trials=trials, update_clusters=False)
+    average_cluster = cluster.get_average_biggest_cluster()
+    return f'Average cluster for $L = {L}$ and probability ${p}$ is ${average_cluster}$'
+
+
+def spanning_cluster_average_cluster_size(L=50, p=0.5, trials=100):
+    model = SpanningCluster(L=L, p=p)
+    model.t_histogram_trials(trials=trials,
+                             reset_histogram=False,
+                             normalize_histogram=False)
+    histogram = model.get_histogram()
+    cluster_size_space = np.array(list(map(int, histogram.keys())))
+    cluster_number_space = np.array(list(histogram.values()))
+
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    axes.scatter(cluster_size_space, cluster_number_space, color='blue', alpha=0.2, s=10)
+    axes.set_title(f'Histogram calculated for $L = {L}$, $p = {p}$ with ${trials}$ trials')
+    axes.set(xlabel='cluster size', ylabel='number of occurences', yscale='log')
+    axes.grid()
+    return figure
+
+
+

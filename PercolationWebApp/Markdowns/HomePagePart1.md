@@ -20,6 +20,21 @@ The Burning Algorithm is a type of percolation process. It provides a simulation
 
 If fire reaches the last row it means that percolation happened. Let's implement it in a code.
 
+# <center>Spanning Cluster</center>
+
+Second part of the project is to count and label every different cluster that was created on the 2D grid. We treat adjacent sites as a cluster if black squares around it created a closed loop. The goal is to see, that for a mentioned before critical probability $p_c$ there is a high chance that we can find a large cluster that spans most of the grid.
+
+To find all cluster we are going to use <i>Hoshen-Kopelman</i> algorithm. It's a method used primarly in computational studies to identify and label clusters often used in percolation theory. In short, here are some key steps of the algorithm:
+
+<ul>
+    <li>First we set the nearest top left available square on the grid. We iterate through each site to the right and then we do it again with another row till the end of the lattice</li>
+    <li>If top and left neighbours are unoccupied (have value $0$) we have found a new cluster</li>
+    <li>If top or left square is occupied we can assign current square to an existing cluster</li>
+    <li>If top and left squares belong to two different clusters, we have found a site that joins them together. We have to assign one of them to another, but important part is to change only the label, not every site because it will increase the simulation time substantially (one graph will show how much of a difference can it make)</li>
+</ul>
+
+After we have labelled all clusters, we can easilly count them, find the biggest one and plot histograms - which is exactly what we will do in the following part of the project.
+
 This `streamlit` app is a tutorial about my project and how to use its objects and how they work. To navigate go to the ***Contents*** page and read about each section.
 
 Below are presented graphs for larger simulations.
