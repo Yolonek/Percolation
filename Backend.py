@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from ProbabilitySite import ProbabilitySite
 from BurningModel.BurningModel import BurningModel
 from SpanningCluster.SpanningCluster import SpanningCluster

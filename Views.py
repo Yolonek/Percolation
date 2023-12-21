@@ -4,19 +4,19 @@ from Backend import *
 
 def home_page():
     image_list = [
-        '../images/ProbabilitySiteL30p-0.3-0.5-0.7.png',
-        '../images/ProbabilitySiteL300p-0.3-0.5-0.7.png',
-        '../BurningModel/images/PercolationGraphL10p-0.5-0.6-0.7.png',
-        '../BurningModel/images/PercolationGraphL300p-0.5-0.6-0.7.png',
-        '../BurningModel/images/PercolationPlotT10000L-100-50-10.png',
-        '../SpanningCluster/images/HKVisualizationL30p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png',
-        '../SpanningCluster/images/HKVisualizationL200p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png',
-        '../SpanningCluster/images/AverageClusterGraphT10000L-10-50-100.png',
-        '../SpanningCluster/images/TimeComparisonGraphT10000L50.png',
-        '../SpanningCluster/images/TimeComparisonGraphT10000L100.png',
-        '../SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png',
-        '../SpanningCluster/images/ClusterSizeDistributionGraphT10000L50.png',
-        '../SpanningCluster/images/ClusterSizeDistributionGraphT10000L100.png'
+        './images/ProbabilitySiteL30p-0.3-0.5-0.7.png',
+        './images/ProbabilitySiteL300p-0.3-0.5-0.7.png',
+        './BurningModel/images/PercolationGraphL10p-0.5-0.6-0.7.png',
+        './BurningModel/images/PercolationGraphL300p-0.5-0.6-0.7.png',
+        './BurningModel/images/PercolationPlotT10000L-100-50-10.png',
+        './SpanningCluster/images/HKVisualizationL30p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png',
+        './SpanningCluster/images/HKVisualizationL200p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png',
+        './SpanningCluster/images/AverageClusterGraphT10000L-10-50-100.png',
+        './SpanningCluster/images/TimeComparisonGraphT10000L50.png',
+        './SpanningCluster/images/TimeComparisonGraphT10000L100.png',
+        './SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png',
+        './SpanningCluster/images/ClusterSizeDistributionGraphT10000L50.png',
+        './SpanningCluster/images/ClusterSizeDistributionGraphT10000L100.png'
     ]
     with open('./Markdowns/HomePagePart1.md', 'r') as file:
         text_to_display = file.read()
@@ -149,7 +149,7 @@ def probability_site_interaction():
 
 
 def probability_site_source_code():
-    with open('../ProbabilitySite.py', 'r') as file:
+    with open('ProbabilitySite.py', 'r') as file:
         source_code = file.read()
     source_code = source_code.split('\n\n\n')
     imports = source_code[0].split('\n')
@@ -231,7 +231,7 @@ def burning_model_description():
     st.markdown('Graph generated for larger parameters is located below. '
                 'We can see that for larger ***L*** line gets steeper. '
                 'Theoretically for $L = \infty$ it is a vertical line.')
-    st.image('../BurningModel/images/PercolationPlotT10000L-100-50-10.png')
+    st.image('./BurningModel/images/PercolationPlotT10000L-100-50-10.png')
     st.markdown('For interactive plots check section `2.2 Interaction`.')
 
 
@@ -290,7 +290,7 @@ def burning_model_interaction():
 
 
 def burning_model_source_code():
-    with open('../BurningModel/BurningModel.py', 'r') as file:
+    with open('./BurningModel/BurningModel.py', 'r') as file:
         source_code = file.read()
     source_code = source_code.split('\n\n\n')
     imports = source_code[0].split('\n')
@@ -385,21 +385,21 @@ def spanning_cluster_description():
                 "On the right side we have better visualizations with each cluster "
                 "separated by a black color, but it takes additional computational time.")
     st.markdown("Below we can see how much of a difference concatenating clusters can make.")
-    st.image('../SpanningCluster/images/TimeComparisonGraphT10000L100.png')
+    st.image('./SpanningCluster/images/TimeComparisonGraphT10000L100.png')
     st.markdown("Let's see how clustering looks for larger system size:")
     st.pyplot(visualize_clustered_grid(L=200, p=0.54, concatenated=True))
     st.markdown("Now based on many repetitions we can estimate the size of the biggest cluster for each probability, "
                 "the same way as we calculated percolation probability in previous part of the project.")
     st.markdown(calculate_average_biggest_cluster(L=100, p=0.54, trials=100))
     st.markdown("Below we can see graphs for larger parameters:")
-    st.image('../SpanningCluster/images/AverageClusterGraphT10000L-10-50-100.png')
+    st.image('./SpanningCluster/images/AverageClusterGraphT10000L-10-50-100.png')
     st.markdown("And last but not least we can create a histogram over many repetitions for given probability.")
     st.pyplot(spanning_cluster_average_cluster_size(L=50, p=0.7, trials=500))
     st.markdown("And below we can see a graph calculated for larger ***L*** and many trials.")
-    st.image('../SpanningCluster/images/ClusterSizeDistributionGraphT10000L100.png')
+    st.image('./SpanningCluster/images/ClusterSizeDistributionGraphT10000L100.png')
     st.markdown("And some other generated graphics:")
-    st.image('../SpanningCluster/images/HKVisualizationL500p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png')
-    st.image('../SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png')
+    st.image('./SpanningCluster/images/HKVisualizationL500p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png')
+    st.image('./SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png')
     st.markdown('For interactive plots check section `3.2 Interaction`.')
 
 
@@ -470,7 +470,7 @@ def spanning_cluster_interaction():
 
 
 def spanning_cluster_source_code():
-    with open('../SpanningCluster/SpanningCluster.py', 'r') as file:
+    with open('./SpanningCluster/SpanningCluster.py', 'r') as file:
         source_code = file.read()
     source_code = source_code.split('\n\n\n')
     imports = source_code[0].split('\n')
