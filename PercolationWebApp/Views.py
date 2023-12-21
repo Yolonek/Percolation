@@ -450,6 +450,25 @@ def spanning_cluster_interaction():
                                            concatenated=is_concat_num,
                                            initial_grid=st.session_state.initial_grid_num_sp,
                                            numeric=True))
+    with plot_tab:
+        size_col_plot, t_col_plot = st.columns(2)
+        L_plot = size_col_plot.number_input('System size', min_value=2, max_value=100,
+                                            value=L_num, step=2, key='size1_plot')
+        t_plot = t_col_plot.slider('Number of trials', min_value=10, max_value=200,
+                                   value=50, step=10, key='trials1_plot')
+        st.pyplot(spanning_cluster_biggest_cluster_plot(L=L_plot, trials=t_plot))
+        st.markdown('Warning. Simulation takes some time for larger parameters.')
+    with histogram_tab:
+        size_col_hist, prob_col_hist, t_col_hist = st.columns(3)
+        L_hist = size_col_hist.number_input('System size', min_value=2, max_value=100,
+                                            value=L_num, step=2, key='size1_hist')
+        probability_hist = prob_col_hist.slider('Probability', min_value=0., max_value=1.,
+                                               value=0.5, step=0.01, key='prob1_hist')
+        t_hist = t_col_hist.slider('Number of trials', min_value=10, max_value=200,
+                                   value=50, step=10, key='trials1_hist')
+        st.pyplot(spanning_cluster_average_cluster_size(L=L_hist, p=probability_hist, trials=t_hist))
+        st.markdown('Warning. Simulation takes some time for larger parameters.')
+
 
 
 

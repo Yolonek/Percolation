@@ -236,4 +236,23 @@ def spanning_cluster_average_cluster_size(L=50, p=0.5, trials=100):
     return figure
 
 
+def spanning_cluster_biggest_cluster_plot(L=20, trials=100):
+    probability_space = np.linspace(0.4, 0.8, 20)
+    percolation_probability = 0.592
+    cluster_space = np.zeros(len(probability_space))
+    model = SpanningCluster(L=L)
+    for index, probability in enumerate(probability_space):
+        model.change_probability(probability)
+        model.t_spanning_cluster_trials(trials=trials, update_clusters=False)
+        cluster_space[index] = model.get_average_biggest_cluster()
+    figure, axes = plt.subplots(1, 1, layout='constrained')
+    axes.plot(probability_space, cluster_space, label=f'L = {L}', color='black')
+    axes.axvline(x=percolation_probability, color='blue', linestyle='--', label=f'$p_c$ = {percolation_probability}')
+    axes.set(xlabel='site probability', ylabel='cluster size',
+             title=f'Average cluster size for L = {L} and t = {trials}')
+    axes.legend(loc='upper left')
+    axes.grid()
+    return figure
+
+
 
