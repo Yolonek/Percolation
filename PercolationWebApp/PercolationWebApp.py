@@ -75,6 +75,6 @@ for button in button_list:
         some_button_clicked = True
 if some_button_clicked is False:
     # home_page()
-    switch_site(spanning_cluster_3_2)
+    switch_site(probability_site_1_2)
 
 

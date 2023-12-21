@@ -86,66 +86,66 @@ def probability_site_interaction():
     st.markdown('In this section you can tweak with different parameters to see how it affects the 2D random grid.'
                 'Plots are the same as the ones shown in section `1.1 Description`.')
 
-    numeric_tab, imshow_tab = st.tabs(['Numeric', 'Image'])
-    with numeric_tab:
-        if 'figure_1' not in st.session_state:
-            st.session_state.figure_1 = None
-        if 'initial_L_1' not in st.session_state:
-            st.session_state.initial_L_1 = None
-        L_1_num = numeric_tab.number_input('System size', min_value=2, max_value=14, value=10, step=2, key='size1_num')
-        if st.session_state.initial_L_1 != L_1_num:
-            st.session_state.initial_L_1 = L_1_num
-            st.session_state.figure_1 = plot_probability_grid(L=L_1_num, numeric=True)
-        st.pyplot(st.session_state.figure_1)
-
-        prob_col_num, l_col_num = st.columns(2)
-        probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
-                                              value=0.5, step=0.01, key='prob1_num')
-
-        L_num = 10
-        if 'initial_L_2' not in st.session_state:
-            st.session_state.initial_L_2 = L_num
-        if 'initial_grid_2' not in st.session_state:
-            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num)
-        L_num = l_col_num.number_input('System size', min_value=2, max_value=20, value=L_num, key='size2_num')
-        if st.session_state.initial_L_2 != L_num:
-            st.session_state.initial_L_2 = L_num
-            st.session_state.initial_grid_2 = generate_probability_grid(L=L_num)
-        st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_2,
-                                                       p=probability_num,
-                                                       initial_grid=st.session_state.initial_grid_2,
-                                                       numeric=True,
-                                                       vertical=True))
-
+    imshow_tab, numeric_tab, comparison_tab = st.tabs(['Image', 'Numeric', 'Comparison'])
     with imshow_tab:
-        if 'figure_3' not in st.session_state:
-            st.session_state.figure_3 = None
-        if 'initial_L_3' not in st.session_state:
-            st.session_state.initial_L_3 = None
-        L_1_im = imshow_tab.number_input('System size', min_value=10, max_value=500, value=50, step=10, key='size1_im')
-        if st.session_state.initial_L_3 != L_1_im:
-            st.session_state.initial_L_3 = L_1_im
-            st.session_state.figure_3 = plot_probability_grid(L=L_1_im, numeric=False)
-        st.pyplot(st.session_state.figure_3)
-
-        prob_col_im, l_col_im = st.columns(2)
-        probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
-                                            value=0.5, step=0.01, key='prob1_im')
-
         L_im = 50
-        if 'initial_L_4' not in st.session_state:
-            st.session_state.initial_L_4 = L_im
-        if 'initial_grid_4' not in st.session_state:
-            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im)
-        L_im = l_col_im.number_input('System size', min_value=10, max_value=500, value=50, step=10, key='size2_im')
-        if st.session_state.initial_L_4 != L_im:
-            st.session_state.initial_L_4 = L_im
-            st.session_state.initial_grid_4 = generate_probability_grid(L=L_im)
-        st.pyplot(plot_grid_comparison_after_threshold(L=st.session_state.initial_L_4,
-                                                       p=probability_im,
-                                                       initial_grid=st.session_state.initial_grid_4,
-                                                       numeric=False,
-                                                       vertical=False))
+        if 'initial_L_im_ps' not in st.session_state:
+            st.session_state.initial_L_im_ps = L_im
+        if 'initial_grid_im_ps' not in st.session_state:
+            st.session_state.initial_grid_im_ps = generate_probability_grid(L=L_im)
+        L_im = st.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
+        if st.session_state.initial_L_im_ps != L_im:
+            st.session_state.initial_L_im_ps = L_im
+            st.session_state.initial_grid_im_ps = generate_probability_grid(L=L_im)
+        st.pyplot(plot_probability_grid(L=L_im, numeric=False))
+    with numeric_tab:
+        L_num = 10
+        if 'initial_L_num_ps' not in st.session_state:
+            st.session_state.initial_L_num_ps = L_num
+        if 'initial_grid_num_ps' not in st.session_state:
+            st.session_state.initial_grid_num_ps = generate_probability_grid(L=L_num)
+        L_num = st.number_input('System size', min_value=2, max_value=14, value=10, step=2, key='size1_num')
+        if st.session_state.initial_L_num_ps != L_num:
+            st.session_state.initial_L_num_ps = L_num
+            st.session_state.initial_grid_num_ps = generate_probability_grid(L=L_num)
+        st.pyplot(plot_probability_grid(L=L_num, numeric=True))
+    with comparison_tab:
+        L_com_num = 10
+        L_com_im = 50
+        if 'initial_L_com_num_ps' not in st.session_state:
+            st.session_state.initial_L_com_num_ps = L_com_num
+        if 'initial_grid_com_num_ps' not in st.session_state:
+            st.session_state.initial_grid_com_num_ps = generate_probability_grid(L=L_com_num)
+        if 'initial_L_com_im_ps' not in st.session_state:
+            st.session_state.initial_L_com_im_ps = L_com_im
+        if 'initial_grid_com_im_ps' not in st.session_state:
+            st.session_state.initial_grid_com_im_ps = generate_probability_grid(L=L_com_im)
+        is_numeric = st.checkbox('Numeric', value=False, key='is_num1_ps')
+        size_col_num, size_col_im, prob_col = st.columns(3)
+        L_com_num = size_col_num.number_input('System size (numeric)', min_value=2, max_value=14,
+                                              value=10, step=2, key='size1_num_com')
+        L_com_im = size_col_im.number_input('System size (image)', min_value=10, max_value=500,
+                                            value=L_im, step=10, key='size1_im_com')
+        probability_com = prob_col.slider('Probability', min_value=0., max_value=1.,
+                                          value=0.5, step=0.01, key='prob1_num_com')
+        if st.session_state.initial_L_com_num_ps != L_com_num:
+            st.session_state.initial_L_com_num_ps = L_com_num
+            st.session_state.initial_grid_com_num_ps = generate_probability_grid(L=L_com_num)
+        if st.session_state.initial_L_com_im_ps != L_com_im:
+            st.session_state.initial_L_com_im_ps = L_com_im
+            st.session_state.initial_grid_com_im_ps = generate_probability_grid(L=L_com_im)
+        if is_numeric:
+            st.pyplot(plot_grid_comparison_after_threshold(L=L_com_num,
+                                                           p=probability_com,
+                                                           initial_grid=st.session_state.initial_grid_com_num_ps,
+                                                           vertical=True,
+                                                           numeric=True))
+        else:
+            st.pyplot(plot_grid_comparison_after_threshold(L=L_com_im,
+                                                           p=probability_com,
+                                                           initial_grid=st.session_state.initial_grid_com_im_ps,
+                                                           vertical=False,
+                                                           numeric=False))
     st.markdown('To see whole `ProbabilitySite` object check section `1.3 Source Code`')
 
 
@@ -418,11 +418,11 @@ def spanning_cluster_interaction():
             st.session_state.initial_L_im_sp = L_im
         if 'initial_grid_im_sp' not in st.session_state:
             st.session_state.initial_grid_im_sp = generate_probability_grid(L=L_im)
-        size_col_im, prob_col_im, con_col_im = st.columns(3)
+        is_concat_im = st.checkbox('Sites relabelled', value=True, key='concat1_im')
+        size_col_im, prob_col_im = st.columns(2)
         L_im = size_col_im.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
         probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
-                                                value=0.5, step=0.01, key='prob1_im')
-        is_concat_im = con_col_im.checkbox('Sites relabelled', value=True, key='concat1_im')
+                                            value=0.5, step=0.01, key='prob1_im')
         if st.session_state.initial_L_im_sp != L_im:
             st.session_state.initial_L_im_sp = L_im
             st.session_state.initial_grid_im_sp = generate_probability_grid(L=L_im)
@@ -436,12 +436,12 @@ def spanning_cluster_interaction():
             st.session_state.initial_L_num_sp = L_num
         if 'initial_grid_num_sp' not in st.session_state:
             st.session_state.initial_grid_num_sp = generate_probability_grid(L=L_num)
-        size_col_num, prob_col_num, con_col_num = st.columns(3)
+        is_concat_num = st.checkbox('Sites relabelled', value=True, key='concat1_num')
+        size_col_num, prob_col_num = st.columns(2)
         L_num = size_col_num.number_input('System size', min_value=2, max_value=14,
                                           value=L_num, step=1, key='size1_num')
         probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
                                               value=0.5, step=0.01, key='prob1_num')
-        is_concat_num = con_col_num.checkbox('Sites relabelled', value=True, key='concat1_num')
         if st.session_state.initial_L_num_sp != L_num:
             st.session_state.initial_L_num_sp = L_num
             st.session_state.initial_grid_num_sp = generate_probability_grid(L=L_num)
@@ -463,14 +463,11 @@ def spanning_cluster_interaction():
         L_hist = size_col_hist.number_input('System size', min_value=2, max_value=100,
                                             value=L_num, step=2, key='size1_hist')
         probability_hist = prob_col_hist.slider('Probability', min_value=0., max_value=1.,
-                                               value=0.5, step=0.01, key='prob1_hist')
+                                                value=0.5, step=0.01, key='prob1_hist')
         t_hist = t_col_hist.slider('Number of trials', min_value=10, max_value=200,
                                    value=50, step=10, key='trials1_hist')
         st.pyplot(spanning_cluster_average_cluster_size(L=L_hist, p=probability_hist, trials=t_hist))
         st.markdown('Warning. Simulation takes some time for larger parameters.')
-
-
-
 
 
 def spanning_cluster_source_code():
