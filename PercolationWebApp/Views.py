@@ -244,13 +244,12 @@ def burning_model_interaction():
     imshow_tab, numeric_tab, plot_tab = st.tabs(['Image', 'Numeric', 'Plot'])
     with imshow_tab:
         L_im = 50
-        probability_im = 0.5
         if 'initial_L_im_bm' not in st.session_state:
             st.session_state.initial_L_im_bm = L_im
         if 'initial_grid_im_bm' not in st.session_state:
             st.session_state.initial_grid_im_bm = generate_probability_grid(L=L_im)
-        L_im = st.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
-        prob_col_im, step_col_im = st.columns(2)
+        size_col_im, prob_col_im, step_col_im = st.columns(3)
+        L_im = size_col_im.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
         probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
                                             value=0.5, step=0.01, key='prob1_im')
         step_im = step_col_im.slider('Step', min_value=2, max_value=600, value=2, step=1, key='step1_im')
@@ -263,13 +262,13 @@ def burning_model_interaction():
                                                         initial_grid=st.session_state.initial_grid_im_bm))
     with numeric_tab:
         L_num = 10
-        probability_num = 0.5
         if 'initial_L_num_bm' not in st.session_state:
             st.session_state.initial_L_num_bm = L_num
         if 'initial_grid_num_bm' not in st.session_state:
             st.session_state.initial_grid_num_bm = generate_probability_grid(L=L_num)
-        L_num = st.number_input('System size', min_value=2, max_value=14, value=L_num, step=1, key='size1_num')
-        prob_col_num, step_col_num = st.columns(2)
+        size_col_num, prob_col_num, step_col_num = st.columns(3)
+        L_num = size_col_num.number_input('System size', min_value=2, max_value=14,
+                                          value=L_num, step=1, key='size1_num')
         probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
                                               value=0.5, step=0.01, key='prob1_num')
         step_num = step_col_num.slider('Step', min_value=2, max_value=80, value=2, step=1, key='step1_num')
@@ -373,7 +372,7 @@ def spanning_cluster_description():
             "       spanning_cluster.visualize_clusters(ax=axes3[x][y], add_title=False)\n" +
             r"figure3.suptitle(f'Visualized grid. Left side is not concatenated, right side is.\n'" + "\n" +
             r"                 f'Probabilities: {" + "','" + ".join(list(map(str, probabilities)))}')")
-    L_1 = 60
+    L_1 = 50
     initial_grid = generate_probability_grid(L=L_1)
     fig1 = spanning_cluster_concat_comparison_image(L=L_1, p=0.5, initial_grid=initial_grid)
     fig1.suptitle(f'Visualized grid. Left side is not concatenated, right side is.\n'
@@ -403,6 +402,55 @@ def spanning_cluster_description():
     st.image('../SpanningCluster/images/HKVisualizationL500p-0.4-0.54-0.56-0.58-0.6-0.8_concat_two_col.png')
     st.image('../SpanningCluster/images/ClusterSizeDistributionGraphT10000L10.png')
     st.markdown('For interactive plots check section `3.2 Interaction`.')
+
+
+def spanning_cluster_interaction():
+    st.markdown('### <center>SpanningCluster Object Interaction</center>', unsafe_allow_html=True)
+    st.markdown('In this section you see how site occupation probability affects clustering on the grid. '
+                'Plots are the same as the ones shown in section `3.1 Description`.')
+    st.markdown("Grid stays the same until ***L*** is changed but colors for clusters "
+                "are chosen randomly while rendering. That's why graphs appear to be different. "
+                "Cluster's shape stays the same.")
+    imshow_tab, numeric_tab, plot_tab, histogram_tab = st.tabs(['Image', 'Numeric', 'Plot', 'Histogram'])
+    with imshow_tab:
+        L_im = 50
+        if 'initial_L_im_sp' not in st.session_state:
+            st.session_state.initial_L_im_sp = L_im
+        if 'initial_grid_im_sp' not in st.session_state:
+            st.session_state.initial_grid_im_sp = generate_probability_grid(L=L_im)
+        size_col_im, prob_col_im, con_col_im = st.columns(3)
+        L_im = size_col_im.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
+        probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
+                                                value=0.5, step=0.01, key='prob1_im')
+        is_concat_im = con_col_im.checkbox('Sites relabelled', value=True, key='concat1_im')
+        if st.session_state.initial_L_im_sp != L_im:
+            st.session_state.initial_L_im_sp = L_im
+            st.session_state.initial_grid_im_sp = generate_probability_grid(L=L_im)
+        st.pyplot(visualize_clustered_grid(L=L_im,
+                                           p=probability_im,
+                                           concatenated=is_concat_im,
+                                           initial_grid=st.session_state.initial_grid_im_sp))
+    with numeric_tab:
+        L_num = 10
+        if 'initial_L_num_sp' not in st.session_state:
+            st.session_state.initial_L_num_sp = L_num
+        if 'initial_grid_num_sp' not in st.session_state:
+            st.session_state.initial_grid_num_sp = generate_probability_grid(L=L_num)
+        size_col_num, prob_col_num, con_col_num = st.columns(3)
+        L_num = size_col_num.number_input('System size', min_value=2, max_value=14,
+                                          value=L_num, step=1, key='size1_num')
+        probability_num = prob_col_num.slider('Probability', min_value=0., max_value=1.,
+                                              value=0.5, step=0.01, key='prob1_num')
+        is_concat_num = con_col_num.checkbox('Sites relabelled', value=True, key='concat1_num')
+        if st.session_state.initial_L_num_sp != L_num:
+            st.session_state.initial_L_num_sp = L_num
+            st.session_state.initial_grid_num_sp = generate_probability_grid(L=L_num)
+        st.pyplot(visualize_clustered_grid(L=L_num,
+                                           p=probability_num,
+                                           concatenated=is_concat_num,
+                                           initial_grid=st.session_state.initial_grid_num_sp,
+                                           numeric=True))
+
 
 
 

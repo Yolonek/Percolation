@@ -19,7 +19,7 @@ def switch_site(site_name):
     elif site_name == spanning_cluster_3_1:
         spanning_cluster_description()
     elif site_name == spanning_cluster_3_2:
-        pass
+        spanning_cluster_interaction()
     elif site_name == spanning_cluster_3_3:
         spanning_cluster_source_code()
 
@@ -75,6 +75,6 @@ for button in button_list:
         some_button_clicked = True
 if some_button_clicked is False:
     # home_page()
-    switch_site(spanning_cluster_3_1)
+    switch_site(spanning_cluster_3_2)
 
 

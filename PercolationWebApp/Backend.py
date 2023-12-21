@@ -195,13 +195,20 @@ def spanning_cluster_concat_comparison_image(L=20, p=0.5, initial_grid=None, add
     return figure
 
 
-def visualize_clustered_grid(L=50, p=0.5, concatenated=True, initial_grid=None):
+def visualize_clustered_grid(L=50, p=0.5, concatenated=True, initial_grid=None, numeric=False):
     model = SpanningCluster(L=L, p=p, initial_grid=initial_grid)
     model.hk_algorithm(reset_grid=True,
-                       update_clusters=concatenated)
+                       update_clusters=concatenated,
+                       initial_grid=initial_grid)
     model.convert_cluster_to_histogram()
     figure, axes = plt.subplots(1, 1, layout='constrained')
-    model.visualize_clusters(ax=axes, add_title=True)
+    if numeric:
+        title = (f'{model.count_all_clusters()} different clusters'
+                 f'{", concatenated" if model.clusters_concatenated else ""}\n'
+                 f'biggest cluster: {model.find_biggest_cluster()}, L = {model.L}, p = {model.p}')
+        model.plot_grid_as_matrix(matrix=model.get_current_grid(), axes=axes, title=title)
+    else:
+        model.visualize_clusters(ax=axes, add_title=True)
     return figure
 
 
