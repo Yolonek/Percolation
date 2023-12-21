@@ -1,5 +1,7 @@
 # <center>Percolation</center>
 
+GitHub Repository for full project can be found [here](https://github.com/Yolonek/Percolation).
+
 Percolation is a theory studying the behavior of connected clusters in a random system. It provides insight into a wide range of phenomena, like physics, mathematics and recently epidemiology.
 
 The basic idea is to generate a grid of square sites, where each one of them can be occupied or not with a certain probability $p$. If many sites are occupied next to each other, they form a cluster. With increasing site occupation probability theese clusters grow larger. At a certain critical probability $p_c$ the cluster spans the entire system. We call this probability the <i>percolation threshold.</i> Mathematically, for infinite 2D system this percolation is equal:

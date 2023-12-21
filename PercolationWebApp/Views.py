@@ -1,6 +1,5 @@
 import streamlit as st
 from Backend import *
-import pandas as pd
 
 
 def home_page():
@@ -251,7 +250,7 @@ def burning_model_interaction():
         size_col_im, prob_col_im, step_col_im = st.columns(3)
         L_im = size_col_im.number_input('System size', min_value=10, max_value=500, value=L_im, step=10, key='size1_im')
         probability_im = prob_col_im.slider('Probability', min_value=0., max_value=1.,
-                                            value=0.5, step=0.01, key='prob1_im')
+                                            value=0.5, step=0.01, key='prob1_im_bm')
         step_im = step_col_im.slider('Step', min_value=2, max_value=600, value=2, step=1, key='step1_im')
         if st.session_state.initial_L_im_bm != L_im:
             st.session_state.initial_L_im_bm = L_im

@@ -1,3 +1,5 @@
+import streamlit
+
 from Views import *
 
 
@@ -47,34 +49,27 @@ button_list = [home_page_str,
                burning_model_2_1, burning_model_2_2, burning_model_2_3,
                spanning_cluster_3_1, spanning_cluster_3_2, spanning_cluster_3_3]
 
-for button in button_list:
-    st.session_state[button] = False
+if 'current_view' not in st.session_state:
+    st.session_state.current_view = home_page_str
 
 with st.sidebar:
     st.title(contents_str)
     if st.button(home_page_str):
-        st.session_state[home_page_str] = True
+        st.session_state.current_view = home_page_str
     with st.expander(probability_site_1):
         for button in button_list[1:4]:
             if st.button(button):
-                st.session_state[button] = True
+                st.session_state.current_view = button
     with st.expander(burning_model_2):
         for button in button_list[4:7]:
             if st.button(button):
-                st.session_state[button] = True
+                st.session_state.current_view = button
     with st.expander(spanning_cluster_3):
         for button in button_list[7:]:
             if st.button(button):
-                st.session_state[button] = True
+                st.session_state.current_view = button
+    st.divider()
+    st.link_button('My GitHub Page', 'https://github.com/Yolonek')
 
-
-some_button_clicked = False
-for button in button_list:
-    if st.session_state[button]:
-        switch_site(button)
-        some_button_clicked = True
-if some_button_clicked is False:
-    # home_page()
-    switch_site(probability_site_1_2)
-
+switch_site(st.session_state.current_view)
 
